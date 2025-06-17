@@ -18,6 +18,9 @@ void Menu(string name)
 {
     Console.WriteLine("-----------------------------------------");
     Console.WriteLine($"Hello {name}. It's {date.DayOfWeek}. This is your math game.\n");
+
+    bool isGameOn = true;
+
     Console.WriteLine($@"What game would you like to play today? Choose from the options below:
 A - Addition
 S - Subtraction
@@ -28,33 +31,36 @@ Q - Quit the program");
 
     var gameSelected = Console.ReadLine();
 
-    switch (gameSelected.Trim().ToLower())
+    do
     {
-        case "a":
-            AdditionGame("Addition game");
-            break;
-        case "s":
-            SubtractionGame("Subtraction game");
-            break;
-        case "m":
-            MultiplicationGame("Multiplication game");
-            break;
-        case "d":
-            DivisionGame("Division game");
-            break;
-        case "q":
-            Console.WriteLine("Goodbye.");
-            Environment.Exit(0);
-            break;
-        default:
-            Console.WriteLine("Invalid input. Goodbye.");
-            Environment.Exit(1);
-            break;
+        switch (gameSelected.Trim().ToLower())
+        {
+            case "a":
+                AdditionGame("Addition game");
+                break;
+            case "s":
+                SubtractionGame("Subtraction game");
+                break;
+            case "m":
+                MultiplicationGame("Multiplication game");
+                break;
+            case "d":
+                DivisionGame("Division game");
+                break;
+            case "q":
+                Console.WriteLine("Goodbye.");
+                isGameOn = false;
+                break;
+            default:
+                Console.WriteLine("Invalid input. Goodbye.");
+                isGameOn = false;
+                break;
 
+        }
     }
+    while (isGameOn);
 
-
-
+    Environment.Exit(0);
     Console.ReadLine();
 }
 
@@ -91,8 +97,11 @@ void AdditionGame(string message)
             Console.ReadLine();
         }
 
-        if (i == 4) Console.WriteLine($"Game over! Your score was: {score}");
-
+        if (i == 4)
+        {
+            Console.WriteLine($"Game over! Your score was: {score}. Press any key to return to the main menu.");
+            Console.ReadLine();
+        }
     }
     
 }
@@ -130,8 +139,11 @@ void SubtractionGame(string message)
             Console.ReadLine();
         }
 
-        if (i == 4) Console.WriteLine($"Game over! Your score was: {score}");
-
+        if (i == 4)
+        {
+            Console.WriteLine($"Game over! Your score was: {score}. Press any key to return to the main menu.");
+            Console.ReadLine();
+        }
     }
 
 }
@@ -169,8 +181,11 @@ void MultiplicationGame(string message)
             Console.ReadLine();
         }
 
-        if (i == 4) Console.WriteLine($"Game over! Your score was: {score}");
-
+        if (i == 4)
+        {
+            Console.WriteLine($"Game over! Your score was: {score}. Press any key to return to the main menu.");
+            Console.ReadLine();
+        }
     }
 
 }
@@ -206,8 +221,11 @@ void DivisionGame(string message)
             Console.ReadLine();
         }
 
-        if (i == 4) Console.WriteLine($"Game over! Your score was: {score}");
-
+        if (i == 4)
+        {
+            Console.WriteLine($"Game over! Your score was: {score}. Press any key to return to the main menu.");
+            Console.ReadLine();
+        }
     }
 
 }
