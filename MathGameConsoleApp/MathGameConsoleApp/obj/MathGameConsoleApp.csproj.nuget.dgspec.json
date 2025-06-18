@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Micha\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj": {}
+    "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Micha\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj": {
+    "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Micha\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj",
+        "projectUniqueName": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj",
         "projectName": "MathGameConsoleApp",
-        "projectPath": "C:\\Users\\Micha\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj",
-        "packagesPath": "C:\\Users\\Micha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Micha\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\obj\\",
+        "projectPath": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\MathGameConsoleApp.csproj",
+        "packagesPath": "C:\\Users\\Michael\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Micha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Michael\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

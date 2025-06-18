@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MathGameConsoleApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e657b326970781ff28787482c282af535f4b0f5d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2768d8d2f5e0c46ed2cb4901e82af405003b7136")]
 [assembly: System.Reflection.AssemblyProductAttribute("MathGameConsoleApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MathGameConsoleApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
