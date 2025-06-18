@@ -45,7 +45,7 @@ bld/
 #wwwroot/
 
 # Extra workaround for nested .vs files
-**/.vs/
+MathGameConsoleApp/.vs/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/
