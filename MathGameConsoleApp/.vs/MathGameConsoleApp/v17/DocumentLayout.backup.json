@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|c:\\users\\michael\\source\\repos\\csharpacademy\\csharpacademy\\mathgameconsoleapp\\mathgameconsoleapp\\models\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|solutionrelative:mathgameconsoleapp\\models\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|c:\\users\\michael\\source\\repos\\csharpacademy\\csharpacademy\\mathgameconsoleapp\\mathgameconsoleapp\\helpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|solutionrelative:mathgameconsoleapp\\helpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|c:\\users\\michael\\source\\repos\\csharpacademy\\csharpacademy\\mathgameconsoleapp\\mathgameconsoleapp\\gameengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,8 +15,8 @@
       "RelativeMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|solutionrelative:mathgameconsoleapp\\menu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|c:\\users\\michael\\source\\repos\\csharpacademy\\csharpacademy\\mathgameconsoleapp\\mathgameconsoleapp\\helpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|solutionrelative:mathgameconsoleapp\\helpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|c:\\users\\michael\\source\\repos\\csharpacademy\\csharpacademy\\mathgameconsoleapp\\mathgameconsoleapp\\models\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|solutionrelative:mathgameconsoleapp\\models\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D5E822A8-B1A6-4207-92D6-52C0806FC2D5}|MathGameConsoleApp\\MathGameConsoleApp.csproj|c:\\users\\michael\\source\\repos\\csharpacademy\\csharpacademy\\mathgameconsoleapp\\mathgameconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
@@ -46,13 +46,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "Game.cs",
               "DocumentMoniker": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\Models\\Game.cs",
               "RelativeDocumentMoniker": "MathGameConsoleApp\\Models\\Game.cs",
               "ToolTip": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\Models\\Game.cs",
               "RelativeToolTip": "MathGameConsoleApp\\Models\\Game.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA0AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-18T01:05:03.826Z",
               "EditorCaption": ""
@@ -65,9 +65,10 @@
               "RelativeDocumentMoniker": "MathGameConsoleApp\\Menu.cs",
               "ToolTip": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\Menu.cs",
               "RelativeToolTip": "MathGameConsoleApp\\Menu.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAQwBAAAABPAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T00:41:57.638Z"
+              "WhenOpened": "2025-06-18T00:41:57.638Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -84,15 +85,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Helpers.cs",
               "DocumentMoniker": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\Helpers.cs",
               "RelativeDocumentMoniker": "MathGameConsoleApp\\Helpers.cs",
               "ToolTip": "C:\\Users\\Michael\\source\\repos\\CSharpAcademy\\CSharpAcademy\\MathGameConsoleApp\\MathGameConsoleApp\\Helpers.cs",
               "RelativeToolTip": "MathGameConsoleApp\\Helpers.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAABIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T00:55:10.696Z"
+              "WhenOpened": "2025-06-18T00:55:10.696Z",
+              "EditorCaption": ""
             }
           ]
         }
