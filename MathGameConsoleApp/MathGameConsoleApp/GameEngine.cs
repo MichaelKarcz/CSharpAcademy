@@ -6,6 +6,9 @@ namespace MathGameConsoleApp
     {
         internal void AdditionGame(string message)
         {
+
+            var difficulty = Helpers.SelectDifficulty();
+
             var random = new Random();
 
 
@@ -17,9 +20,12 @@ namespace MathGameConsoleApp
             for (int i = 0; i < 5; i++)
             {
                 Console.Clear();
-                Console.WriteLine(message);
-                firstNumber = random.Next(1, 9);
-                secondNumber = random.Next(1, 9);
+                Console.WriteLine($"{message} - {difficulty}");
+
+                int[] numbers = Helpers.GetNumbers(difficulty);
+
+                firstNumber = numbers[0];
+                secondNumber = numbers[1];
 
                 Console.WriteLine($"{firstNumber} + {secondNumber}");
                 var result = Console.ReadLine();
@@ -43,12 +49,14 @@ namespace MathGameConsoleApp
                     Console.ReadLine();
                 }
             }
-            Helpers.AddToHistory(score, GameType.Addition);
+            Helpers.AddToHistory(score, difficulty, GameType.Addition);
         }
 
 
         internal void SubtractionGame(string message)
         {
+            var difficulty = Helpers.SelectDifficulty();
+
             var random = new Random();
 
 
@@ -60,9 +68,12 @@ namespace MathGameConsoleApp
             for (int i = 0; i < 5; i++)
             {
                 Console.Clear();
-                Console.WriteLine(message);
-                firstNumber = random.Next(1, 9);
-                secondNumber = random.Next(1, 9);
+                Console.WriteLine($"{message} - {difficulty}");
+
+                int[] numbers = Helpers.GetNumbers(difficulty);
+
+                firstNumber = numbers[0];
+                secondNumber = numbers[1];
 
                 Console.WriteLine($"{firstNumber} - {secondNumber}");
                 var result = Console.ReadLine();
@@ -86,12 +97,14 @@ namespace MathGameConsoleApp
                     Console.ReadLine();
                 }
             }
-            Helpers.AddToHistory(score, GameType.Subtraction);
+            Helpers.AddToHistory(score, difficulty, GameType.Subtraction);
         }
 
 
         internal void MultiplicationGame(string message)
         {
+            var difficulty = Helpers.SelectDifficulty();
+
             var random = new Random();
 
 
@@ -103,9 +116,12 @@ namespace MathGameConsoleApp
             for (int i = 0; i < 5; i++)
             {
                 Console.Clear();
-                Console.WriteLine(message);
-                firstNumber = random.Next(1, 9);
-                secondNumber = random.Next(1, 9);
+                Console.WriteLine($"{message} - {difficulty}");
+
+                int[] numbers = Helpers.GetNumbers(difficulty);
+
+                firstNumber = numbers[0];
+                secondNumber = numbers[1];
 
                 Console.WriteLine($"{firstNumber} * {secondNumber}");
                 var result = Console.ReadLine();
@@ -129,12 +145,14 @@ namespace MathGameConsoleApp
                     Console.ReadLine();
                 }
             }
-            Helpers.AddToHistory(score, GameType.Multiplication);
+            Helpers.AddToHistory(score, difficulty, GameType.Multiplication);
         }
 
 
         internal void DivisionGame(string message)
         {
+            var difficulty = Helpers.SelectDifficulty();
+
             int firstNumber;
             int secondNumber;
 
@@ -143,8 +161,9 @@ namespace MathGameConsoleApp
             for (int i = 0; i < 5; i++)
             {
                 Console.Clear();
-                Console.WriteLine(message);
-                var divisionNumbers = Helpers.GetDivisionNumbers();
+                Console.WriteLine($"{message} - {difficulty}");
+
+                var divisionNumbers = Helpers.GetDivisionNumbers(difficulty);
                 firstNumber = divisionNumbers[0];
                 secondNumber = divisionNumbers[1];
 
@@ -170,7 +189,7 @@ namespace MathGameConsoleApp
                     Console.ReadLine();
                 }
             }
-            Helpers.AddToHistory(score, GameType.Division);
+            Helpers.AddToHistory(score, difficulty, GameType.Division);
         }
     }
 }

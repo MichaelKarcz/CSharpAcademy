@@ -6,14 +6,16 @@
 
         internal void ShowMenu(string name, DateTime date)
         {
-            Console.WriteLine("-----------------------------------------");
-            Console.WriteLine($"Hello {name}. It's {date.DayOfWeek}. This is your math game.\n");
+            Console.WriteLine($"Hello {name}. It's {date.DayOfWeek}. This is your math game. Press any key to continue.\n");
+            Console.ReadLine();
 
             bool isGameOn = true;
 
             do
             {
-                Console.WriteLine($@"What game would you like to play today? Choose from the options below:
+                Console.Clear();
+                Console.WriteLine("-----------------------------------------");
+                Console.WriteLine(@"What game would you like to play today? Choose from the options below:
 V - View Previous Games
 A - Addition
 S - Subtraction
