@@ -1,0 +1,5 @@
+C:\Users\Micha\publishes\MathGameConsoleApp.exe
+C:\Users\Micha\publishes\MathGameConsoleApp.dll
+C:\Users\Micha\publishes\MathGameConsoleApp.deps.json
+C:\Users\Micha\publishes\MathGameConsoleApp.runtimeconfig.json
+C:\Users\Micha\publishes\MathGameConsoleApp.pdb

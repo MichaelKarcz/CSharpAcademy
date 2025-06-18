@@ -1,0 +1,15 @@
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\bin\Release\net9.0\MathGameConsoleApp.exe
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\bin\Release\net9.0\MathGameConsoleApp.deps.json
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\bin\Release\net9.0\MathGameConsoleApp.runtimeconfig.json
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\bin\Release\net9.0\MathGameConsoleApp.dll
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\bin\Release\net9.0\MathGameConsoleApp.pdb
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.AssemblyInfoInputs.cache
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.AssemblyInfo.cs
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.sourcelink.json
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.dll
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\refint\MathGameConsoleApp.dll
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.pdb
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\MathGameConsoleApp.genruntimeconfig.cache
+C:\Users\Micha\source\repos\CSharpAcademy\CSharpAcademy\MathGameConsoleApp\MathGameConsoleApp\obj\Release\net9.0\ref\MathGameConsoleApp.dll
