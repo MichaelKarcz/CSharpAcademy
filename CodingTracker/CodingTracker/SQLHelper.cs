@@ -18,6 +18,7 @@ namespace CodingTracker
 
                 string commandText = $@"CREATE TABLE IF NOT EXISTS {TABLENAME} (
                                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                              Date TEXT,
                                               StartTime TEXT,
                                               EndTime TEXT,
                                               Duration TEXT
@@ -31,97 +32,99 @@ namespace CodingTracker
             }
         }
 
-        public static List<CodingSession> GetAllRecords()
+        public static List<CodingSession> GetAllSessions()
         {
-            List<CodingSession> allEntries = new List<CodingSession>();
+
+            string commandText = $@"SELECT * FROM {TABLENAME}";
+
+            List<CodingSession> allEntries = PerformROperation(commandText);
+            
+            return allEntries;
+        }
+
+        public static List<CodingSession> GetUnfinishedSessions()
+        {
+            string commandText = $@"Select * FROM {TABLENAME}
+                                    WHERE EndTime IS NULL OR EndTime=''";
+
+            List<CodingSession> unfinishedSessions = PerformROperation(commandText);
+
+            return unfinishedSessions;
+        }
+
+        public static bool InsertSingleSession(CodingSession habit)
+        {
+            string commandText = $@"INSERT INTO {TABLENAME} (Date, StartTime, EndTime, Duration)
+                                 VALUES (@Date, @StartTime, @EndTime, @Duration);";
+
+            object[] parameters = { new { Date=habit.Date, StartTime=habit.StartTime, EndTime=habit.EndTime, Duration=habit.Duration }};
+
+            return PerformCUDOperation(commandText, parameters);
+
+        }
+
+        public static bool DeleteSession(int id)
+        {
+            string commandText = $@"DELETE FROM {TABLENAME}
+                                 WHERE Id=@Id;";
+
+            object[] parameters = { new { Id = id } };
+
+            return PerformCUDOperation(commandText, parameters);
+        }
+
+        public static bool UpdateSession(int id, CodingSession habit)
+        {
+            string commandText = $@"UPDATE {TABLENAME}
+                                 SET Date=@Date, StartTime=@StartTime, EndTime=@EndTime, Duration=@Duration
+                                 WHERE Id=@Id;";
+
+            object[] parameters = { new { Id = id, Date = habit.Date, StartTime = habit.StartTime, EndTime = habit.EndTime, Duration = habit.Duration } };
+
+            return PerformCUDOperation(commandText, parameters);
+        }
+
+        private static List<CodingSession> PerformROperation(string commandText)
+        {
+            List<CodingSession> retrievedSessions = new List<CodingSession>();
 
             try
             {
-                using (var connection = new SqliteConnection(CONNECTION_STRING))
+                var connection = new SqliteConnection(CONNECTION_STRING);
+
+                var reader = connection.ExecuteReader(commandText);
+
+                while (reader.Read())
                 {
-                    connection.Open();
-                    var tableCmd = connection.CreateCommand();
-
-                    tableCmd.CommandText = $@"SELECT * FROM {TABLENAME}";
-
-                    SqliteDataReader reader = tableCmd.ExecuteReader();
-
-                    if (reader.HasRows)
+                    retrievedSessions.Add(new CodingSession
                     {
-                        while (reader.Read())
-                        {
-                            allEntries.Add(
-                                new CodingSession
-                                {
-                                    Id = reader.GetInt32(0),
-                                    Date = DateTime.ParseExact(reader.GetString(1), "mm-dd-yyyy", new CultureInfo("en-US")),
-                                    StartTime = reader.GetString(2),
-                                    EndTime = reader.GetString(3),
-                                    Duration = reader.GetString(4)
-                                });
-                        }
-                    }
-                    else
-                    {
-                        return new List<CodingSession>();
-                    }
-
-                    connection.Close();
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        Date = reader.GetString(reader.GetOrdinal("Date")),
+                        StartTime = reader.GetString(reader.GetOrdinal("StartTime")),
+                        EndTime = reader.GetString(reader.GetOrdinal("EndTime")),
+                        Duration = reader.GetString(reader.GetOrdinal("Duration"))
+                    });
                 }
-
             }
             catch (SqliteException e)
             {
                 Console.WriteLine($"\n\nThere was an error trying to retrieve the database records. Error message: {e.Message}\n\n");
                 return new List<CodingSession>();
             }
-
-            return allEntries;
+            return retrievedSessions;
         }
 
-        public static bool InsertSingleRecord(CodingSession habit)
-        {
-            string commandText = $@"INSERT INTO {TABLENAME} (Date, StartTime, EndTime, Duration)
-                                 VALUES ('{habit.Date}', '{habit.StartTime}', '{habit.EndTime}', '{habit.Duration}');";
-
-            return PerformCUDOperation(commandText);
-        }
-
-        public static bool DeleteRecord(int id)
-        {
-            string commandText = $@"DELETE FROM {TABLENAME}
-                                 WHERE Id={id};";
-
-            return PerformCUDOperation(commandText);
-        }
-
-        public static bool UpdateRecord(int id, CodingSession habit)
-        {
-            string commandText = $@"UPDATE {TABLENAME}
-                                 SET Date='{habit.Date}', StartTime='{habit.StartTime}', EndTime='{habit.EndTime}', Duration='{habit.Duration}'
-                                 WHERE Id={id};";
-
-            return PerformCUDOperation(commandText);
-        }
-
-        private static bool PerformCUDOperation(string commandText)
+        private static bool PerformCUDOperation(string commandText, object[] parameters)
         {
             bool commandSuccessful = false;
 
             try
             {
-                using (var connection = new SqliteConnection(CONNECTION_STRING))
-                {
-                    connection.Open();
-                    var tableCmd = connection.CreateCommand();
-                    tableCmd.CommandText = commandText;
+                var connection = new SqliteConnection(CONNECTION_STRING);
 
-                    int rowsAffected = tableCmd.ExecuteNonQuery();
+                int rowsUpdated = connection.Execute(commandText, parameters);
 
-                    if (rowsAffected > 0) commandSuccessful = true;
-
-                    connection.Close();
-                }
+                commandSuccessful = rowsUpdated > 0 ? true : false;
             }
             catch (SqliteException e)
             {

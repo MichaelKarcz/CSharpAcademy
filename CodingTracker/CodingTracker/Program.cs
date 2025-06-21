@@ -20,25 +20,33 @@ namespace CodingTracker
                     case 0:
                         runProgram = false;
                         break;
+                    case 1:
+                        Input.DisplayAllRecords();
+                        break;
+                    case 2:
+                        Input.GetNewOngoingSession();
+                        break;
+                    case 3:
+                        Input.FinishOngoingSession();
+                        break;
+                    case 4:
+                        Input.GetNewCompletedSession();
+                        break;
+                    case 5:
+                        Input.UpdateSession();
+                        break;
+                    case 6:
+                        Input.DeleteSession();
+                        break;
+                    default:
+                        Console.WriteLine("\nError in processing selection. The app will now close.");
+                        runProgram = false;
+                        break;
                 }
             }
 
             Console.WriteLine("\n\nGoodbye!");
-
-            /*
-            var test = DateTime.Now.ToString("hh:mm tt");
-
-            DateTime testParse = DateTime.ParseExact("04:22 PM", "hh:mm tt", new CultureInfo("en-US"));
-
-            var timeOne = DateTime.ParseExact("05:30 PM", "hh:mm tt", new CultureInfo("en-US"));
-            var timeTwo = DateTime.ParseExact("08:30 AM", "hh:mm tt", new CultureInfo("en-US"));
-
-            var timeDifference = timeTwo - timeOne;
-
-            Console.WriteLine($"\nDateTime value: {test}");
-            Console.WriteLine($"\nDateTime parsed from string: {testParse}");
-            Console.WriteLine($"\nTime Difference between {timeTwo} and {timeOne} = {timeDifference}");
-            */
+            Console.ReadKey();
 
         }
     }
