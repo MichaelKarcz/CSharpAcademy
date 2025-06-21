@@ -10,16 +10,14 @@ namespace CodingTracker
     internal class CodingSession
     {
         internal int Id { get; set; }
-        internal string Date { get; set; } // MM-dd-yyyy
-        internal string StartTime { get; set; } // hh:mm tt
-        internal string? EndTime { get; set; } // hh:mm tt
+        internal string StartTime { get; set; } // MM-dd-yyyy hh:mm tt
+        internal string? EndTime { get; set; } // MM-dd-yyyy hh:mm tt
         internal string? Duration { get; set; }
 
 
         internal CodingSession()
         {
-            Date = DateTime.Now.ToString("MM-dd-yyyy", new CultureInfo("en-US"));
-            StartTime = DateTime.Now.ToString("hh:mm tt", new CultureInfo("en-US"));
+            StartTime = DateTime.Now.ToString("MM-dd-yyyy hh:mm tt", new CultureInfo("en-US"));
             EndTime = "";
             Duration = "";
         }
@@ -28,8 +26,8 @@ namespace CodingTracker
         {
             if (!string.IsNullOrEmpty(EndTime) && !string.IsNullOrEmpty(StartTime))
             {
-                DateTime endTimeDT = DateTime.ParseExact(EndTime, "hh:mm tt", new CultureInfo("en-US"));
-                DateTime startTimeDT = DateTime.ParseExact(StartTime, "hh:mm tt", new CultureInfo("en-US"));
+                DateTime endTimeDT = DateTime.ParseExact(EndTime, "MM-dd-yyyy hh:mm tt", new CultureInfo("en-US"));
+                DateTime startTimeDT = DateTime.ParseExact(StartTime, "MM-dd-yyyy hh:mm tt", new CultureInfo("en-US"));
 
                 Duration = (endTimeDT - startTimeDT).ToString();
             }

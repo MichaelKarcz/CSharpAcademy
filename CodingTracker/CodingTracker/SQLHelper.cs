@@ -18,7 +18,6 @@ namespace CodingTracker
 
                 string commandText = $@"CREATE TABLE IF NOT EXISTS {TABLENAME} (
                                               Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                              Date TEXT,
                                               StartTime TEXT,
                                               EndTime TEXT,
                                               Duration TEXT
@@ -54,10 +53,10 @@ namespace CodingTracker
 
         public static bool InsertSingleSession(CodingSession habit)
         {
-            string commandText = $@"INSERT INTO {TABLENAME} (Date, StartTime, EndTime, Duration)
-                                 VALUES (@Date, @StartTime, @EndTime, @Duration);";
+            string commandText = $@"INSERT INTO {TABLENAME} (StartTime, EndTime, Duration)
+                                 VALUES (@StartTime, @EndTime, @Duration);";
 
-            object[] parameters = { new { Date=habit.Date, StartTime=habit.StartTime, EndTime=habit.EndTime, Duration=habit.Duration }};
+            object[] parameters = { new {StartTime=habit.StartTime, EndTime=habit.EndTime, Duration=habit.Duration }};
 
             return PerformCUDOperation(commandText, parameters);
 
@@ -76,10 +75,10 @@ namespace CodingTracker
         public static bool UpdateSession(int id, CodingSession habit)
         {
             string commandText = $@"UPDATE {TABLENAME}
-                                 SET Date=@Date, StartTime=@StartTime, EndTime=@EndTime, Duration=@Duration
+                                 SET StartTime=@StartTime, EndTime=@EndTime, Duration=@Duration
                                  WHERE Id=@Id;";
 
-            object[] parameters = { new { Id = id, Date = habit.Date, StartTime = habit.StartTime, EndTime = habit.EndTime, Duration = habit.Duration } };
+            object[] parameters = { new { Id = id, StartTime = habit.StartTime, EndTime = habit.EndTime, Duration = habit.Duration } };
 
             return PerformCUDOperation(commandText, parameters);
         }
@@ -99,7 +98,6 @@ namespace CodingTracker
                     retrievedSessions.Add(new CodingSession
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        Date = reader.GetString(reader.GetOrdinal("Date")),
                         StartTime = reader.GetString(reader.GetOrdinal("StartTime")),
                         EndTime = reader.GetString(reader.GetOrdinal("EndTime")),
                         Duration = reader.GetString(reader.GetOrdinal("Duration"))

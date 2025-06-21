@@ -37,13 +37,12 @@ namespace CodingTracker
             Console.WriteLine("\n~Coding Sessions~");
             Table table = new Table();
             table.AddColumn(new TableColumn("Id").Centered().NoWrap());
-            table.AddColumn(new TableColumn("Date").Centered().NoWrap());
             table.AddColumn(new TableColumn("Start Time").Centered().NoWrap());
             table.AddColumn(new TableColumn("End Time").Centered().NoWrap());
             table.AddColumn(new TableColumn("Duration").Centered().NoWrap());
             foreach (CodingSession session in allSessions)
             {
-                table.AddRow(session.Id.ToString(), session.Date, session.StartTime, session.EndTime, session.Duration);
+                table.AddRow(session.Id.ToString(), session.StartTime, session.EndTime, session.Duration);
             }
             table.Border(TableBorder.Heavy);
             table.ShowRowSeparators();
@@ -65,7 +64,6 @@ namespace CodingTracker
 
             if (!sessionStartedNow)
             {
-                session.Date = GetDate();
                 session.StartTime = GetStartTime();   
             }
             else
@@ -73,7 +71,7 @@ namespace CodingTracker
                 Console.WriteLine("\nA new coding session has been added!\n");
             }
 
-                SQLHelper.InsertSingleSession(session); // the constructor instantiates the object with DateTime.Now for the date and StartTime fields
+                SQLHelper.InsertSingleSession(session); // the constructor instantiates the object with DateTime.Now for the StartTime field
         }
 
         public static void FinishOngoingSession()
@@ -94,7 +92,7 @@ namespace CodingTracker
             }
             else
             {
-                unfinishedSession.EndTime = DateTime.Now.ToString("hh:mm tt");
+                unfinishedSession.EndTime = DateTime.Now.ToString("MM-dd-yyyy hh:mm tt");
             }
 
             unfinishedSession.CalculateDuration();
@@ -109,7 +107,6 @@ namespace CodingTracker
         {
             CodingSession session = new CodingSession();
 
-            session.Date = GetDate();
             session.StartTime = GetStartTime();
             session.EndTime = GetEndTime(session.StartTime);
             session.CalculateDuration();
@@ -133,15 +130,11 @@ namespace CodingTracker
                     "and press [green]<enter>[/] to accept)[/]")
                 .AddChoices(new[]
                 {
-                    "Date", "Start Time", "End Time"
+                    "Start Time", "End Time"
                 }));
 
             if (updatesToMake.Count > 0 )
             {
-                if (updatesToMake.Contains("Date"))
-                {
-                    sessionToUpdate.Date = GetDate();
-                }
                 if (updatesToMake.Contains("Start Time"))
                 {
                     sessionToUpdate.StartTime = GetStartTime();
@@ -172,7 +165,7 @@ namespace CodingTracker
 
             bool confirmDelete = AnsiConsole.Prompt(
                 new TextPrompt<bool>($"Are you sure you'd like to delete this record?"
-                                     + $"\n{sessionToDelete.Id}\t|\t{sessionToDelete.Date}\t|\t{sessionToDelete.StartTime}\t|\t{sessionToDelete.EndTime}\t|\t{sessionToDelete.Duration}")
+                                     + $"\n{sessionToDelete.Id}\t|\t{sessionToDelete.StartTime}\t|\t{sessionToDelete.EndTime}\t|\t{sessionToDelete.Duration}")
                 .AddChoice(true)
                 .AddChoice(false)
                 .DefaultValue(false)
@@ -197,19 +190,10 @@ namespace CodingTracker
 
         }
 
-        public static string GetDate()
-        {
-            string date = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the date in the format MM-dd-yyyy: ")
-                .Validate<string>(n => Validation.ValidateDate(n)));
-
-            return date;
-        }
-
         public static string GetStartTime()
         {
             string startTime = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the starting time in the format hh:mm tt where tt is AM or PM: ")
+                new TextPrompt<string>("Please enter the starting time in the format MM-dd-yyyy hh:mm tt where tt is AM or PM ('03-14-2025 03:22 PM' for example): ")
                 .Validate<string>(n => Validation.ValidateGenericTime(n)));
 
             return startTime;
@@ -218,7 +202,7 @@ namespace CodingTracker
         public static string GetEndTime(string startTime)
         {
             string endTime = AnsiConsole.Prompt(
-                new TextPrompt<string>("Please enter the ending time in the format hh:mm tt where tt is AM or PM: ")
+                new TextPrompt<string>("Please enter the ending time in the format MM-dd-yyyy hh:mm tt where tt is AM or PM ('03-14-2025 03:22 PM' for example): ")
                 .Validate<string>(n => Validation.ValidateEndTime(n, startTime)));
 
             return endTime;
@@ -232,8 +216,8 @@ namespace CodingTracker
 
             foreach (CodingSession session in sessions)
             {
-                tableRows[index] = $"{session.Id}\t|\t{session.Date}\t|\t{session.StartTime}\t|\t";
-                tableRows[index] += string.IsNullOrEmpty(session.EndTime) ? "\t\t|\t" : $"{session.EndTime}\t|\t";
+                tableRows[index] = $"{session.Id}\t|\t{session.StartTime}\t|\t";
+                tableRows[index] += string.IsNullOrEmpty(session.EndTime) ? "\t\t\t|\t\t" : $"{session.EndTime}\t|\t";
                 tableRows[index] += session.Duration;
                 index++;
             }
@@ -241,7 +225,7 @@ namespace CodingTracker
             string recordChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("Which [green]session[/] would you like to modify?"
-                        + "\nId\t|\tDate\t\t|\tStart Time\t|\tEnd Time\t|\tDuration")
+                        + "\nId\t|\t\tStart Time\t|\t\tEnd Time\t|\tDuration")
                 .PageSize(sessions.Count > 3 ? sessions.Count : 3)
                 .MoreChoicesText("[grey](Move up and down to reveal more entries)[/]")
                 .AddChoices(tableRows));
