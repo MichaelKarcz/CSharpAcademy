@@ -1,4 +1,6 @@
-﻿namespace CodingTracker
+﻿using Spectre.Console;
+
+namespace CodingTracker
 {
     internal class TableVisualizationEngine
     {

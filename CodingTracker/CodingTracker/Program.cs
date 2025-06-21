@@ -10,10 +10,22 @@ namespace CodingTracker
         {
             SQLHelper.CreateDatabaseIfNotExists();
 
-            string sAttr = ConfigurationManager.AppSettings.Get("connectionString");
+            bool runProgram = true;
+            while (runProgram)
+            {
+                int menuChoice = Input.MainMenu();
 
-            Console.WriteLine($"The value of connectionString is {sAttr}");
+                switch (menuChoice)
+                {
+                    case 0:
+                        runProgram = false;
+                        break;
+                }
+            }
 
+            Console.WriteLine("\n\nGoodbye!");
+
+            /*
             var test = DateTime.Now.ToString("hh:mm tt");
 
             DateTime testParse = DateTime.ParseExact("04:22 PM", "hh:mm tt", new CultureInfo("en-US"));
@@ -26,8 +38,7 @@ namespace CodingTracker
             Console.WriteLine($"\nDateTime value: {test}");
             Console.WriteLine($"\nDateTime parsed from string: {testParse}");
             Console.WriteLine($"\nTime Difference between {timeTwo} and {timeOne} = {timeDifference}");
-
-            Console.ReadKey();
+            */
 
         }
     }
