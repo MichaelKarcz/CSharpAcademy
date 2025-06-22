@@ -77,30 +77,34 @@ namespace CodingTracker
         public static void FinishOngoingSession()
         {
             List<CodingSession> unfinishedSessions = SQLHelper.GetUnfinishedSessions();
-            CodingSession unfinishedSession = SelectASessionById(unfinishedSessions);
-
-            bool sessionEndedNow = AnsiConsole.Prompt(
-                new TextPrompt<bool>("Did you just finish this coding session?")
-                .AddChoice(true)
-                .AddChoice(false)
-                .DefaultValue(true)
-                .WithConverter(choice => choice ? "Yes" : "No"));
-
-            if (!sessionEndedNow)
+            if (unfinishedSessions.Count > 0)
             {
-                unfinishedSession.EndTime = GetEndTime(unfinishedSession.StartTime);
-            }
-            else
-            {
-                unfinishedSession.EndTime = DateTime.Now.ToString("MM-dd-yyyy hh:mm tt");
-            }
+                CodingSession unfinishedSession = SelectASessionById(unfinishedSessions);
 
-            unfinishedSession.CalculateDuration();
+                bool sessionEndedNow = AnsiConsole.Prompt(
+                    new TextPrompt<bool>("Did you just finish this coding session?")
+                    .AddChoice(true)
+                    .AddChoice(false)
+                    .DefaultValue(true)
+                    .WithConverter(choice => choice ? "Yes" : "No"));
 
-            if(SQLHelper.UpdateSession(unfinishedSession.Id, unfinishedSession))
-            {
-                Console.WriteLine("\nThe coding session has been completed!\n");
+                if (!sessionEndedNow)
+                {
+                    unfinishedSession.EndTime = GetEndTime(unfinishedSession.StartTime);
+                }
+                else
+                {
+                    unfinishedSession.EndTime = DateTime.Now.ToString("MM-dd-yyyy hh:mm tt");
+                }
+
+                unfinishedSession.CalculateDuration();
+
+                if (SQLHelper.UpdateSession(unfinishedSession.Id, unfinishedSession))
+                {
+                    Console.WriteLine("\nThe coding session has been completed!\n");
+                }
             }
+            else Console.WriteLine("\nThere are no sessions to update.\n");
         }
 
         public static void GetNewCompletedSession()
@@ -117,76 +121,84 @@ namespace CodingTracker
         public static void UpdateSession()
         {
             List<CodingSession> allSessions = SQLHelper.GetAllSessions();
-            CodingSession sessionToUpdate = SelectASessionById(allSessions);
-            List<string> updatesToMake = new List<string>();
-
-            updatesToMake = AnsiConsole.Prompt(
-                new MultiSelectionPrompt<string>()
-                .Title("What would you like to [green]update[/] about the session?")
-                .NotRequired()
-                .PageSize(3)
-                .InstructionsText(
-                    "[grey](Press [blue]<space>[/] to toggle a selection, " +
-                    "and press [green]<enter>[/] to accept)[/]")
-                .AddChoices(new[]
-                {
-                    "Start Time", "End Time"
-                }));
-
-            if (updatesToMake.Count > 0 )
+            if (allSessions.Count > 0)
             {
-                if (updatesToMake.Contains("Start Time"))
-                {
-                    sessionToUpdate.StartTime = GetStartTime();
-                }
-                if (updatesToMake.Contains("End Time"))
-                {
-                    sessionToUpdate.EndTime = GetEndTime(sessionToUpdate.StartTime);
-                }
+                CodingSession sessionToUpdate = SelectASessionById(allSessions);
+                List<string> updatesToMake = new List<string>();
 
-                sessionToUpdate.CalculateDuration();
+                updatesToMake = AnsiConsole.Prompt(
+                    new MultiSelectionPrompt<string>()
+                    .Title("What would you like to [green]update[/] about the session?")
+                    .NotRequired()
+                    .PageSize(3)
+                    .InstructionsText(
+                        "[grey](Press [blue]<space>[/] to toggle a selection, " +
+                        "and press [green]<enter>[/] to accept)[/]")
+                    .AddChoices(new[]
+                    {
+                        "Start Time", "End Time"
+                    }));
 
-                if (SQLHelper.UpdateSession(sessionToUpdate.Id, sessionToUpdate))
+                if (updatesToMake.Count > 0)
                 {
-                    Console.WriteLine("\nThe session was updated successfully!\n");
+                    if (updatesToMake.Contains("Start Time"))
+                    {
+                        sessionToUpdate.StartTime = GetStartTime();
+                    }
+                    if (updatesToMake.Contains("End Time"))
+                    {
+                        sessionToUpdate.EndTime = GetEndTime(sessionToUpdate.StartTime);
+                    }
+
+                    sessionToUpdate.CalculateDuration();
+
+                    if (SQLHelper.UpdateSession(sessionToUpdate.Id, sessionToUpdate))
+                    {
+                        Console.WriteLine("\nThe session was updated successfully!\n");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nNo changes were made.\n");
                 }
             }
-            else
-            {
-                Console.WriteLine("\nNo changes were made.\n");
-            }
+            else Console.WriteLine("\nThere are no sessions to update.\n");
 
         }
 
         public static void DeleteSession()
         {
             List<CodingSession> allSessions = SQLHelper.GetAllSessions();
-            CodingSession sessionToDelete = SelectASessionById(allSessions);
-
-            bool confirmDelete = AnsiConsole.Prompt(
-                new TextPrompt<bool>($"Are you sure you'd like to delete this record?"
-                                     + $"\n{sessionToDelete.Id}\t|\t{sessionToDelete.StartTime}\t|\t{sessionToDelete.EndTime}\t|\t{sessionToDelete.Duration}")
-                .AddChoice(true)
-                .AddChoice(false)
-                .DefaultValue(false)
-                .WithConverter(choice => choice ? "Yes" : "No"));
-
-            if (!confirmDelete)
+            if (allSessions.Count > 0)
             {
-                Console.WriteLine("\nThe session was not deleted.\n");
-            }
-            else
-            {
-                bool sessionDeleted = SQLHelper.DeleteSession(sessionToDelete.Id);
-                if (sessionDeleted)
+                CodingSession sessionToDelete = SelectASessionById(allSessions);
+
+                bool confirmDelete = AnsiConsole.Prompt(
+                    new TextPrompt<bool>($"Are you sure you'd like to delete this record?"
+                                         + $"\n{sessionToDelete.Id}\t|\t{sessionToDelete.StartTime}\t|\t{sessionToDelete.EndTime}\t|\t{sessionToDelete.Duration}")
+                    .AddChoice(true)
+                    .AddChoice(false)
+                    .DefaultValue(false)
+                    .WithConverter(choice => choice ? "Yes" : "No"));
+
+                if (!confirmDelete)
                 {
-                    Console.WriteLine("The session has been deleted successfully.");
+                    Console.WriteLine("\nThe session was not deleted.\n");
                 }
                 else
                 {
-                    Console.WriteLine("There was an error deleting the record.");
+                    bool sessionDeleted = SQLHelper.DeleteSession(sessionToDelete.Id);
+                    if (sessionDeleted)
+                    {
+                        Console.WriteLine("The session has been deleted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("There was an error deleting the record.");
+                    }
                 }
             }
+            else Console.WriteLine("\nThere are no sessions to delete.\n");
 
         }
 
