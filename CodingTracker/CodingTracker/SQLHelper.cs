@@ -36,7 +36,7 @@ namespace CodingTracker
 
             string commandText = $@"SELECT * FROM {TABLENAME}";
 
-            List<CodingSession> allEntries = PerformROperation(commandText);
+            List<CodingSession> allEntries = PerformReadOperation(commandText);
             
             return allEntries;
         }
@@ -46,7 +46,7 @@ namespace CodingTracker
             string commandText = $@"Select * FROM {TABLENAME}
                                     WHERE EndTime IS NULL OR EndTime=''";
 
-            List<CodingSession> unfinishedSessions = PerformROperation(commandText);
+            List<CodingSession> unfinishedSessions = PerformReadOperation(commandText);
 
             return unfinishedSessions;
         }
@@ -83,26 +83,15 @@ namespace CodingTracker
             return PerformCUDOperation(commandText, parameters);
         }
 
-        private static List<CodingSession> PerformROperation(string commandText)
+        private static List<CodingSession> PerformReadOperation(string commandText)
         {
             List<CodingSession> retrievedSessions = new List<CodingSession>();
 
             try
             {
                 var connection = new SqliteConnection(CONNECTION_STRING);
-
-                var reader = connection.ExecuteReader(commandText);
-
-                while (reader.Read())
-                {
-                    retrievedSessions.Add(new CodingSession
-                    {
-                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        StartTime = reader.GetString(reader.GetOrdinal("StartTime")),
-                        EndTime = reader.GetString(reader.GetOrdinal("EndTime")),
-                        Duration = reader.GetString(reader.GetOrdinal("Duration"))
-                    });
-                }
+                retrievedSessions = connection.Query<CodingSession>(commandText).ToList<CodingSession>();
+                
             }
             catch (SqliteException e)
             {
