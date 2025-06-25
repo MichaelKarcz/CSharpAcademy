@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlashCards
+namespace FlashCards.Database
 {
-    internal class SQLHelper
+    internal static class GeneralDBHelper
     {
+        private static string _connectionString;
+
+
+
 
     }
 }

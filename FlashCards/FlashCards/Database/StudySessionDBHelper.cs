@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlashCards
+namespace FlashCards.Database
 {
-    internal class FlashcardDTO
+    internal class StudySessionDBHelper
     {
-
     }
 }

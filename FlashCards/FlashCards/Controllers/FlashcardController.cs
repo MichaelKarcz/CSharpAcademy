@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlashCards
+namespace FlashCards.Controllers
 {
-    internal class FlashcardStackController
+    internal class FlashcardController
     {
+
     }
 }

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlashCards
+namespace FlashCards.Controllers
 {
-    internal class FlashcardController
+    internal class StudySessionController
     {
-
     }
 }
