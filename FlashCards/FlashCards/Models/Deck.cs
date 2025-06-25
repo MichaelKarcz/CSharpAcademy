@@ -12,16 +12,16 @@ namespace FlashCards.Models
         public string Name { get; set; }
         public List<Flashcard> Flashcards { get; set; }
 
-        int StackId { get; set; }
-
 
         public Deck()
         {
+            Name = string.Empty;
             Flashcards = new List<Flashcard>();
         }
 
-        public Deck(List<Flashcard> flashcards)
+        public Deck(string name, List<Flashcard> flashcards)
         {
+            Name = name;
             Flashcards = flashcards;
         }
 

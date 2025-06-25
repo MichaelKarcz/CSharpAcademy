@@ -19,7 +19,7 @@ namespace FlashCards.Controllers
 
         }
 
-        internal static void CreateAFlashcardStack()
+        internal static void CreateADeck()
         {
 
         }

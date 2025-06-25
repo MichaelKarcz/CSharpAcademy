@@ -10,6 +10,7 @@ namespace FlashCards.DTOs
     internal class StudySessionDTO
     {
         public Deck StudyDeck { get; set; }
+        public DateTime SessionDate { get; set; }
 
         public StudySessionDTO() 
         {
