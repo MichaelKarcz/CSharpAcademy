@@ -8,11 +8,16 @@ namespace FlashCards.DTOs
 {
     internal class FlashcardDTO
     {
-        public int Id { get; set; }
-        public string Front { get; set; }
-        public string Back { get; set; }
+        internal int Id { get; set; }
+        internal string Front { get; set; }
+        internal string Back { get; set; }
 
-        public FlashcardDTO(int id, string front, string back) 
+        internal FlashcardDTO()
+        {
+
+        }
+        
+        internal FlashcardDTO(int id, string front, string back) 
         {
             Id = id;
             Front = front;

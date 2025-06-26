@@ -8,18 +8,18 @@ namespace FlashCards.Models
 {
     internal class Deck
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<Flashcard> Flashcards { get; set; }
+        internal int Id { get; set; }
+        internal string Name { get; set; }
+        internal List<Flashcard> Flashcards { get; set; }
 
 
-        public Deck()
+        internal Deck()
         {
             Name = string.Empty;
             Flashcards = new List<Flashcard>();
         }
 
-        public Deck(string name, List<Flashcard> flashcards)
+        internal Deck(string name, List<Flashcard> flashcards)
         {
             Name = name;
             Flashcards = flashcards;

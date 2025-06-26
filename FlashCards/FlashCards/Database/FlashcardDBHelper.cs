@@ -1,54 +1,37 @@
 ﻿using Microsoft.Data.SqlClient;
 using Dapper;
 using FlashCards.Models;
+using System.Configuration;
+using FlashCards.DTOs;
 
 namespace FlashCards.Database
 {
-    public class FlashcardDBHelper
+    internal static class FlashcardDBHelper
     {
 
-        private string _connectionString {  get; set; }
+        private static string CONNECTION_STRING = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
 
-
-        public FlashcardDBHelper(string dataSource, string username, string password, string initialCatalog)
+        internal static List<FlashcardDTO> GetAllFlashcards()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
-            {
-                DataSource = dataSource, //"<your_server.database.windows.net>",
-                UserID = username, //"<your_username>",
-                Password = password, //"<password>",
-                InitialCatalog = initialCatalog //"<your_database>"
-            };
+            List<FlashcardDTO> returnedRecords = new List<FlashcardDTO>();
 
-            _connectionString = builder.ConnectionString;
-        }
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"SELECT * FROM Flashcards";
 
-        public List<object> PerformReadOperation(string sqlCommand, string parameters)
-        {
-            List<object> returnedRecords= new List<object>();
-
-            SqlConnection conn = new SqlConnection(_connectionString);
-
+            returnedRecords = conn.Query<FlashcardDTO>(sql).ToList();
 
 
             return returnedRecords;
         }
 
-        private SqlConnection CreateSQLConnection(string connectionString)
+        internal static bool CheckForRecords()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"SELECT TOP (1) * FROM Flashcards";
 
-            try
-            {
-                SqlConnection conn = new SqlConnection(_connectionString);
-                return conn;
-            }
-            catch(SqlException ex)
-            {
-                Console.WriteLine($"An error occurred creating the SQL Connection. Error message: {ex.ToString()}");
-                throw;
-            }
+            List<FlashcardDTO> returnedRecords = conn.Query<FlashcardDTO>(sql).ToList();
+
+            return returnedRecords.Count > 0;
         }
-
     }
 }

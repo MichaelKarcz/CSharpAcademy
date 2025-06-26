@@ -9,12 +9,22 @@ namespace FlashCards.DTOs
 {
     internal class StudySessionDTO
     {
-        public Deck StudyDeck { get; set; }
-        public DateTime SessionDate { get; set; }
+        internal int Id { get; set; }
+        internal Deck StudyDeck { get; set; }
+        internal DateTime SessionDate { get; set; }
+        internal int Score { get; set; }
 
-        public StudySessionDTO() 
+        internal StudySessionDTO() 
         {
 
+        }
+
+        internal StudySessionDTO(int id, Deck studyDeck, DateTime sessionDate, int score)
+        {
+            Id = id;
+            StudyDeck = studyDeck;
+            SessionDate = sessionDate;
+            Score = score;
         }
     }
 }
