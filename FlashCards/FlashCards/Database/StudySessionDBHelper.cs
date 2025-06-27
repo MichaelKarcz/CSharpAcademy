@@ -41,5 +41,34 @@ namespace FlashCards.Database
 
             return  rowsAffected > 0;
         }
+
+        internal static bool UpdateStudySessionById(int id, StudySession studySession)
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"UPDATE StudySessions
+                            SET Score = @Score, SessionDate = @SessionDate, DeckId = @DeckId
+                            WHERE Id = @Id";
+            int rowsAffected = conn.Execute(sql, new {Score = studySession.Score, SessionDate = studySession.SessionDate, DeckId = studySession.StudyDeck, Id = id });
+
+            return rowsAffected > 0;
+        }
+
+        internal static bool DeleteStudySessionById(int id)
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"DELETE * FROM StudySessions WHERE Id = @Id";
+            int rowsAffected = conn.Execute(sql, new { Id = id });
+
+            return rowsAffected > 0;
+        }
+
+        internal static bool DeleteAllStudySessionsOfDeck(int deckId)
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"DELETE * FROM StudySessions WHERE DeckId = @DeckId";
+            int rowsAffected = conn.Execute(sql, new { DeckId = deckId });
+
+            return rowsAffected > 0;
+        }
     }
 }
