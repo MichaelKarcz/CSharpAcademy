@@ -11,18 +11,6 @@ namespace FlashCards.Database
 
         private static string CONNECTION_STRING = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
 
-        internal static List<FlashcardDTO> GetAllFlashcards()
-        {
-            List<FlashcardDTO> returnedRecords = new List<FlashcardDTO>();
-
-            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"SELECT * FROM Flashcards";
-
-            returnedRecords = conn.Query<FlashcardDTO>(sql).ToList();
-
-
-            return returnedRecords;
-        }
 
         internal static bool CheckForRecords()
         {
@@ -32,6 +20,25 @@ namespace FlashCards.Database
             List<FlashcardDTO> returnedRecords = conn.Query<FlashcardDTO>(sql).ToList();
 
             return returnedRecords.Count > 0;
+        }
+
+        internal static List<FlashcardDTO> GetAllFlashcards()
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"SELECT * FROM Flashcards";
+            List<FlashcardDTO> returnedRecords = conn.Query<FlashcardDTO>(sql).ToList();
+
+            return returnedRecords;
+        }
+
+        internal static bool InsertFlashcard(Flashcard flashcard)
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"INSERT INTO Flashcards (Front, Back, DeckId) 
+                            VALUES (@Front, @Back, @DeckId)";
+            int rowsAffected = conn.Execute(sql, new { Front = flashcard.Front, Back = flashcard.Back, DeckId = flashcard.DeckId });
+
+            return rowsAffected > 0;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using FlashCards.DTOs;
+using FlashCards.Models;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -14,16 +15,31 @@ namespace FlashCards.Database
     {
         private static string CONNECTION_STRING = ConfigurationManager.AppSettings.Get("flashcardsConnectionString");
 
-
-
         internal static bool CheckForRecords()
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
             string sql = @"SELECT TOP (1) * FROM StudySessions";
-
             List<StudySessionDTO> returnedRecords = conn.Query<StudySessionDTO>(sql).ToList();
 
             return returnedRecords.Count > 0;
+        }
+
+        internal static List<StudySession> GetAllStudySessions()
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"SELECT * FROM StudySessions";
+            List<StudySession> returnedRecords = conn.Query<StudySession>(sql).ToList();
+
+            return returnedRecords;
+        }
+
+        internal static bool InsertStudySession(StudySession studySession)
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"INSERT INTO StudySessions (Score, SessionDate, DeckId) VALUES (@Score, @SessionDate, @DeckId)";
+            int rowsAffected = conn.Execute(sql, new { Score = studySession.Score, SessionDate = studySession.SessionDate, DeckId = studySession.StudyDeck});
+
+            return  rowsAffected > 0;
         }
     }
 }
