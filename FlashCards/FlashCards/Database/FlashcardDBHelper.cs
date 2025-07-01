@@ -25,7 +25,7 @@ namespace FlashCards.Database
         internal static List<FlashcardDTO> GetAllFlashcards()
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"SELECT * FROM Flashcards";
+            string sql = @"SELECT * FROM Flashcards ORDER BY DeckId";
             List<FlashcardDTO> returnedRecords = conn.Query<FlashcardDTO>(sql).ToList();
 
             return returnedRecords;
@@ -64,7 +64,7 @@ namespace FlashCards.Database
         internal static bool DeleteFlashcardById(int id)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"DELETE * FROM Flashcards WHERE Id = @Id";
+            string sql = @"DELETE FROM Flashcards WHERE Id = @Id";
             int rowsAffected = conn.Execute(sql, new { Id = id });
 
             return rowsAffected > 0;
@@ -73,7 +73,7 @@ namespace FlashCards.Database
         internal static bool DeleteAllFlashcardsInDeck(int deckId)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"DELETE * FROM Flashcards WHERE DeckId = @DeckId";
+            string sql = @"DELETE FROM Flashcards WHERE DeckId = @DeckId";
             int rowsAffected = conn.Execute(sql, new { DeckId = deckId });
 
             return rowsAffected > 0;

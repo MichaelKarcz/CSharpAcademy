@@ -25,5 +25,10 @@ namespace FlashCards.Models
             Flashcards = flashcards;
         }
 
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
+
     }
 }

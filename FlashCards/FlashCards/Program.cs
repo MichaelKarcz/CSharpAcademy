@@ -1,5 +1,6 @@
 ﻿using FlashCards.Database;
 using FlashCards.Controllers;
+using Spectre.Console;
 
 namespace FlashCards;
 
@@ -8,19 +9,10 @@ public class Program()
     public static void Main(string[] args)
     {
         bool initializationSuccessful = GeneralDBHelper.InitializeDatabase();
-        Console.WriteLine($"Database initialization result: {initializationSuccessful}\n\n");
 
-        FlashcardController.DisplayFlashcards(FlashcardDBHelper.GetAllFlashcards());
+        if (initializationSuccessful) MenuController.RunMenuLoop();
 
-        Console.WriteLine();
-
-        bool flashcardsHaveRecords = FlashcardDBHelper.CheckForRecords();
-        bool decksHaveRecords = DeckDBHelper.CheckForRecords();
-        bool studySessionsHaveRecords = StudySessionDBHelper.CheckForRecords();
-
-        Console.WriteLine($"Flashcards empty: {!flashcardsHaveRecords}\nDecks empty: {!decksHaveRecords}\nStudy Sessions empty: {!studySessionsHaveRecords}\n");
-
-        Console.WriteLine("Press any key to exit the program.");
-        Console.ReadKey();
+        AnsiConsole.WriteLine("\nPress any key to exit the program.");
+        AnsiConsole.Console.Input.ReadKey(false);
     }
 }

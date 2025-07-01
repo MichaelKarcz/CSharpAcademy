@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols;
+using Spectre.Console;
 
 namespace FlashCards.Database
 {
@@ -27,7 +28,8 @@ namespace FlashCards.Database
             }
             catch (SqlException ex)
             {
-                Console.WriteLine($"\n\nAn error has occurred while initializing the database. Error message: {ex.Message}\n\n");
+                
+                AnsiConsole.WriteLine($"\n\nAn error has occurred while initializing the database. Error message: {ex.Message}\n\n");
                 initializationSuccessful = false;
             }
 
@@ -45,7 +47,7 @@ namespace FlashCards.Database
             }
             catch (SqlException ex)
             {
-                Console.WriteLine($"An error occurred creating the SQL Connection. Error message: {ex.ToString()}");
+                AnsiConsole.WriteLine($"An error occurred creating the SQL Connection. Error message: {ex.ToString()}");
                 throw;
             }
         }
@@ -92,7 +94,9 @@ namespace FlashCards.Database
                                     CREATE TABLE StudySessions (
                                         Id INT PRIMARY KEY IDENTITY (1,1),
                                         Score INT NOT NULL,
+                                        CardsStudied INT NOT NULL,
                                         SessionDate DATETIME NOT NULL,
+                                        DeckName VARCHAR(255),
                                         DeckId INT NOT NULL,
                                         FOREIGN KEY (DeckId) REFERENCES Decks(Id)
                                     );

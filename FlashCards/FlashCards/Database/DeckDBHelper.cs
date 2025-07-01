@@ -34,13 +34,14 @@ namespace FlashCards.Database
             return returnedRecords;
         }
 
-        internal static bool InsertDeck(Deck deck)
+        internal static int InsertDeck(Deck deck)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"INSERT INTO Decks (Name) VALUES (@Name)";
-            int rowsAffected = conn.Execute(sql, new { Name = deck.Name });
+            string sql = @"INSERT INTO Decks (Name) VALUES (@Name);
+                            SELECT CAST(SCOPE_IDENTITY() as int)";
+            int newId = conn.QuerySingle<int>(sql, new { Name = deck.Name });
 
-            return rowsAffected > 0;
+            return newId;
         }
 
         internal static bool UpdateDeckById(int id, Deck deck)
@@ -57,7 +58,7 @@ namespace FlashCards.Database
         internal static bool DeleteDeckById(int id)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"DELETE * FROM Decks WHERE Id = @Id";
+            string sql = @"DELETE FROM Decks WHERE Id = @Id";
             int rowsAffected = conn.Execute(sql, new { Id = id });
 
             return rowsAffected > 0;

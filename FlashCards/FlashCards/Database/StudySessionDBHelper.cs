@@ -24,11 +24,20 @@ namespace FlashCards.Database
             return returnedRecords.Count > 0;
         }
 
-        internal static List<StudySession> GetAllStudySessions()
+        internal static List<StudySessionDTO> GetAllStudySessions()
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"SELECT * FROM StudySessions";
-            List<StudySession> returnedRecords = conn.Query<StudySession>(sql).ToList();
+            string sql = @"SELECT * FROM StudySessions ORDER BY DeckId, SessionDate";
+            List<StudySessionDTO> returnedRecords = conn.Query<StudySessionDTO>(sql).ToList();
+
+            return returnedRecords;
+        }
+
+        internal static List<StudySessionDTO> GetAllStudySessionsOfDeck(Deck deck)
+        {
+            SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
+            string sql = @"SELECT * FROM StudySessions WHERE DeckId = @DeckId ORDER BY SessionDate";
+            List<StudySessionDTO> returnedRecords = conn.Query<StudySessionDTO>(sql, new {DeckId = deck.Id}).ToList();
 
             return returnedRecords;
         }
@@ -36,8 +45,8 @@ namespace FlashCards.Database
         internal static bool InsertStudySession(StudySession studySession)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"INSERT INTO StudySessions (Score, SessionDate, DeckId) VALUES (@Score, @SessionDate, @DeckId)";
-            int rowsAffected = conn.Execute(sql, new { Score = studySession.Score, SessionDate = studySession.SessionDate, DeckId = studySession.StudyDeck});
+            string sql = @"INSERT INTO StudySessions (Score, CardsStudied, SessionDate, DeckId, DeckName) VALUES (@Score, @CardsStudied, @SessionDate, @DeckId, @DeckName)";
+            int rowsAffected = conn.Execute(sql, new { Score = studySession.Score, CardsStudied = studySession.CardsStudied, SessionDate = studySession.SessionDate, DeckId = studySession.DeckId, DeckName = studySession.DeckName});
 
             return  rowsAffected > 0;
         }
@@ -46,9 +55,9 @@ namespace FlashCards.Database
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
             string sql = @"UPDATE StudySessions
-                            SET Score = @Score, SessionDate = @SessionDate, DeckId = @DeckId
+                            SET Score = @Score, SessionDate = @SessionDate, DeckId = @DeckId, DeckName = @DeckName
                             WHERE Id = @Id";
-            int rowsAffected = conn.Execute(sql, new {Score = studySession.Score, SessionDate = studySession.SessionDate, DeckId = studySession.StudyDeck, Id = id });
+            int rowsAffected = conn.Execute(sql, new {Score = studySession.Score, SessionDate = studySession.SessionDate, DeckId = studySession.DeckId, DeckName = studySession.DeckName, Id = id });
 
             return rowsAffected > 0;
         }
@@ -56,7 +65,7 @@ namespace FlashCards.Database
         internal static bool DeleteStudySessionById(int id)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"DELETE * FROM StudySessions WHERE Id = @Id";
+            string sql = @"DELETE FROM StudySessions WHERE Id = @Id";
             int rowsAffected = conn.Execute(sql, new { Id = id });
 
             return rowsAffected > 0;
@@ -65,7 +74,7 @@ namespace FlashCards.Database
         internal static bool DeleteAllStudySessionsOfDeck(int deckId)
         {
             SqlConnection conn = GeneralDBHelper.CreateSQLConnection(CONNECTION_STRING);
-            string sql = @"DELETE * FROM StudySessions WHERE DeckId = @DeckId";
+            string sql = @"DELETE FROM StudySessions WHERE DeckId = @DeckId";
             int rowsAffected = conn.Execute(sql, new { DeckId = deckId });
 
             return rowsAffected > 0;
