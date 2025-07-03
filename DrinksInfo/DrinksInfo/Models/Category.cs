@@ -10,10 +10,10 @@ namespace DrinksInfo.Models
 {
     public class Category
     {
-        [JsonProperty("strCategory")] string? StrCategory;
+        public string strCategory { get; set; }
         public override string ToString()
         {
-            return StrCategory ?? "";
+            return strCategory ?? "";
         }
     }
     

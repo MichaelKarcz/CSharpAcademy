@@ -9,25 +9,26 @@ namespace DrinksInfo;
 
 public class Program()
 {
-
     public static void Main(string[] args)
     {
-        List<Category> categories = DrinksService.GetCategories();
+        while(true)
+        {
+            AnsiConsole.Write(new Markup("[grey]Press ctrl+c to exit the program[/]\n\n"));
+            List<Category> categories = DrinksService.GetCategories();
+            Category cat = IOEngine.SelectACategory(categories);
+            AnsiConsole.Clear();
 
-        Category cat = IOEngine.SelectACategory(categories);
+            List<Drink> drinks = DrinksService.GetDrinksByCategory(cat);
+            Drink drink = IOEngine.SelectADrink(drinks);
+            
+            DrinkInfo drinkInfo = DrinksService.GetDrinkInfo(drink);
+            IOEngine.DisplayDrinkInfo(drinkInfo);
 
-        List<Drink> drinks = DrinksService.GetDrinksByCategory(cat);
-        Drink drink = IOEngine.SelectADrink(drinks);
-        DrinkInfo drinkInfo = DrinksService.GetDrinkInfo(drink);
-        IOEngine.DisplayDrinkInfo(drinkInfo);
-
-        Console.WriteLine("Press any key to exit.");
-        Console.ReadKey();
-
-
+            AnsiConsole.Write(new Markup("\n[grey]Press any key to return to the main menu.[/]\n"));
+            AnsiConsole.Console.Input.ReadKey(false);
+            AnsiConsole.Clear();
+        }
     }
-
-
 }
 
 

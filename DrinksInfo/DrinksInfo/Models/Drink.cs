@@ -10,16 +10,16 @@ namespace DrinksInfo.Models
 {
     public class Drink
     {
-        [JsonProperty("idDrink")] int IdDrink;
-        [JsonProperty("strDrink")] string? StrDrink;
+        public int idDrink { get; set; }
+        public string strDrink { get; set; }
 
         public int GetId()
         {
-            return IdDrink;
+            return idDrink;
         }
         public override string ToString()
         {
-            return StrDrink;
+            return strDrink;
         }
     }
 
