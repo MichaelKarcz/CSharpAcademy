@@ -10,7 +10,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Phonebook.Models
 {
-    internal class Contact
+    public class Contact
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -32,16 +32,14 @@ namespace Phonebook.Models
         }
     }
 
-    internal class ContactContext : DbContext
+    public class ContactContext : DbContext
     {
-        internal DbSet<Contact> Contacts { get; set; }
-        internal string DbPath { get; }
+        public DbSet<Contact> Contacts { get; set; }
+        
 
-        internal ContactContext()
+        public ContactContext()
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "phonebook.db");
+            
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -8,16 +8,29 @@ public class Program()
     {
         using (ContactContext db = new ContactContext())
         {
+            /*
             db.Contacts.Add(new Contact
             {
                 Name = "Michael Karcz",
                 Email = "MichaelAKarcz@gmail.com",
                 Phone = "585-590-9534"
             });
-
+            
             Console.WriteLine("Calling save changes...");
             db.SaveChanges();
             Console.WriteLine("Save changes complete");
+            */
+
+            Contact myContact = db.Contacts.First();
+
+            Console.WriteLine(myContact.Name);
+
+            /*
+            db.Remove(myContact);
+            Console.WriteLine("Calling save changes...");
+            db.SaveChanges();
+            Console.WriteLine("Save changes complete");
+            */
         }
     }
 }
