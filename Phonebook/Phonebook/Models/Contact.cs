@@ -30,6 +30,11 @@ namespace Phonebook.Models
             Email = email;
             Phone = phone;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public class ContactContext : DbContext

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Phonebook.Models;
+using Spectre.Console;
 
 namespace Phonebook.Database
 {
@@ -14,10 +15,11 @@ namespace Phonebook.Database
         {
             using (ContactContext db = new ContactContext())
             {
+                AnsiConsole.WriteLine("Retrieving contacts...");
                 List<Contact> allContacts = db.Contacts
                     .OrderBy(c => c.Name)
                     .ToList();
-
+                AnsiConsole.Clear();
                 return allContacts;
             }
         }
@@ -38,10 +40,10 @@ namespace Phonebook.Database
         {
             using (ContactContext db = new ContactContext())
             {
-                db.Contacts.Add(contact);
-                Console.WriteLine("Saving the contact...");
+                db.Contacts.Update(contact);
+                Console.WriteLine("Updating the contact...");
                 db.SaveChanges();
-                Console.WriteLine("Save changes complete\n");
+                Console.WriteLine("Update complete\n");
 
             }
         }

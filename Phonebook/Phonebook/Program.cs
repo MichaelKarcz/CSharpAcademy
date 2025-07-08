@@ -1,4 +1,5 @@
-﻿using Phonebook.Models;
+﻿using Phonebook.Controllers;
+using Phonebook.Models;
 
 namespace Phonebook;
 
@@ -8,6 +9,9 @@ public class Program()
     {
         using (ContactContext db = new ContactContext())
         {
+
+            MenuController.RunMenuLoop();
+
             /*
             db.Contacts.Add(new Contact
             {
@@ -19,13 +23,13 @@ public class Program()
             Console.WriteLine("Calling save changes...");
             db.SaveChanges();
             Console.WriteLine("Save changes complete");
-            */
+            
 
             Contact myContact = db.Contacts.First();
 
             Console.WriteLine(myContact.Name);
 
-            /*
+            
             db.Remove(myContact);
             Console.WriteLine("Calling save changes...");
             db.SaveChanges();

@@ -13,7 +13,6 @@ namespace Phonebook.Controllers
         {
             int menuChoiceNumber = -1;
 
-
             while (menuChoiceNumber != 0)
             {
 
