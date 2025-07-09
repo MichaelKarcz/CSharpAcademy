@@ -6,14 +6,15 @@ namespace ShiftLogger.Services
 {
     internal static class ShiftLoggerAPIService
     {
-        private static readonly string serviceAddress = "https://localhost/7099/api/";
+        private static readonly string serviceAddress = "http://localhost:5144/api/";
 
         #region Worker Methods
 
         internal static List<Worker> GetAllWorkers()
         {
-            RestClient Client = new RestClient(serviceAddress);
-            RestRequest request = new RestRequest("/Worker/");
+            var options = new RestClientOptions(serviceAddress);
+            RestClient Client = new RestClient(options);
+            RestRequest request = new RestRequest("Worker");
             var response = Client.ExecuteAsync(request);
 
             if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
@@ -22,6 +23,12 @@ namespace ShiftLogger.Services
                 var serialize = JsonConvert.DeserializeObject<Workers>(rawResponse);
 
                 List<Worker> workers = serialize.WorkersList;
+
+                Console.Write("Success!");
+                if (workers != null && workers.Count == 0)
+                {
+                    Console.WriteLine("No workers to return");
+                }
 
                 return workers;
             }
