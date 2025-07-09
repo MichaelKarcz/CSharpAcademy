@@ -1,14 +1,15 @@
-﻿using ShiftLogger.API.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ShiftLogger.API.Data;
 using ShiftLogger.API.Models;
 
 namespace ShiftLogger.API.Services
 {
     public interface IWorkerService
     {
-        public List<Worker> GetAllWorkers();
-        public Worker GetWorkerById(int id);
         public Worker CreateWorker(Worker worker);
-        public Worker UpdateWorker(int id, Worker updatedWorker);
+        public List<Worker> GetAllWorkers();
+        public Worker? GetWorkerById(int id);
+        public Worker? UpdateWorker(int id, Worker updatedWorker);
         public string? DeleteWorker(int id);
     }
 
@@ -23,27 +24,55 @@ namespace ShiftLogger.API.Services
 
         public Worker CreateWorker(Worker worker)
         {
-            throw new NotImplementedException();
-        }
-
-        public string? DeleteWorker(int id)
-        {
-            throw new NotImplementedException();
+            var addedWorker = _context.Workers.Add(worker);
+            return addedWorker.Entity;
         }
 
         public List<Worker> GetAllWorkers()
         {
-            throw new NotImplementedException();
+            return _context.Workers.ToList();
         }
 
-        public Worker GetWorkerById(int id)
+        public Worker? GetWorkerById(int id)
         {
-            throw new NotImplementedException();
+            Worker? savedWorker = _context.Workers.Find(id);
+
+            if (savedWorker == null)
+            {
+                return null;
+            }
+
+            return savedWorker;
         }
 
-        public Worker UpdateWorker(int id, Worker updatedWorker)
+        public Worker? UpdateWorker(int id, Worker updatedWorker)
         {
-            throw new NotImplementedException();
+            Worker? savedWorker = _context.Workers.Find(id);
+
+            if (savedWorker == null)
+            {
+                return null;
+            }
+
+            _context.Entry(savedWorker).CurrentValues.SetValues(updatedWorker);
+            _context.SaveChanges();
+
+            return savedWorker;
+        }
+
+        public string? DeleteWorker(int id)
+        {
+            Worker? savedWorker = _context.Workers.Find(id);
+
+            if (savedWorker == null)
+            {
+                return null;
+            }
+
+            _context.Remove(savedWorker);
+            _context.SaveChanges();
+
+            return $"Successfully deleted worker with id: {id}";
         }
     }
 }

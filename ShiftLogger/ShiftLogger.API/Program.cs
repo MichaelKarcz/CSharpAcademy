@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShiftLogger.API.Data;
+using ShiftLogger.API.Services;
 
 namespace ShiftLogger.API
 {
@@ -11,11 +12,12 @@ namespace ShiftLogger.API
 
             // Add services to the container.
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddOpenApi(); // swagger
+            builder.Services.AddSwaggerGen(); // swagger
             builder.Services.AddControllers();
             builder.Services.AddDbContext<ShiftLoggerDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            
+            builder.Services.AddScoped<IShiftService, ShiftService>();
+            builder.Services.AddScoped<IWorkerService, WorkerService>();
 
             var app = builder.Build();
 
@@ -27,10 +29,8 @@ namespace ShiftLogger.API
 
             app.UseHttpsRedirection();
 
-            
-
+            app.MapControllers();
           
-
             app.Run();
         }
     }

@@ -13,5 +13,10 @@ namespace ShiftLogger.API.Data
         {
 
         }
+
+        public ShiftLoggerDbContext(DbContextOptions<ShiftLoggerDbContext> options) : base(options)
+        {
+
+        }
     }
 }
