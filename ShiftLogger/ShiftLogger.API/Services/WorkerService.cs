@@ -25,6 +25,7 @@ namespace ShiftLogger.API.Services
         public Worker CreateWorker(Worker worker)
         {
             var addedWorker = _context.Workers.Add(worker);
+            _context.SaveChanges();
             return addedWorker.Entity;
         }
 

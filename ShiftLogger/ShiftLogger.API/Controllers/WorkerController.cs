@@ -8,9 +8,9 @@ namespace ShiftLogger.API.Controllers
     [Route("api/[controller]")]
     public class WorkerController : ControllerBase
     {
-        private readonly WorkerService _workerService;
+        private readonly IWorkerService _workerService;
 
-        public WorkerController(WorkerService workerService)
+        public WorkerController(IWorkerService workerService)
         {
             _workerService = workerService;
         }

@@ -10,9 +10,6 @@ namespace ShiftLogger.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi(); // swagger
             builder.Services.AddSwaggerGen(); // swagger
             builder.Services.AddControllers();
             builder.Services.AddDbContext<ShiftLoggerDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -24,7 +21,8 @@ namespace ShiftLogger.API
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();

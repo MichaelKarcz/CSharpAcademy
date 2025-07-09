@@ -8,9 +8,9 @@ namespace ShiftLogger.API.Controllers
     [Route("api/[controller]")]
     public class ShiftController : ControllerBase
     {
-        private readonly ShiftService _shiftService;
+        private readonly IShiftService _shiftService;
 
-        public ShiftController(ShiftService service)
+        public ShiftController(IShiftService service)
         {
             _shiftService = service;
         }
@@ -27,7 +27,7 @@ namespace ShiftLogger.API.Controllers
             return Ok(_shiftService.GetAllShiftsForWorker(id));
         }
 
-        [HttpGet("/unfinished/{id}")]
+        [HttpGet("api/[controller]/unfinished/{id}")]
         public ActionResult<Shift> GetUnfinishedShiftForWorker(int id)
         {
             var result = _shiftService.GetUnfinishedShiftForWorker(id);
