@@ -14,7 +14,7 @@ namespace ShiftLogger.API
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
             builder.Services.AddControllers();
-            builder.Services.AddDbContext<ShiftLoggerContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<ShiftLoggerDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             
 
             var app = builder.Build();
