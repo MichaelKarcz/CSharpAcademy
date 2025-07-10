@@ -6,7 +6,7 @@ namespace ShiftLogger.Services
 {
     internal static class ShiftLoggerAPIService
     {
-        private static readonly string serviceAddress = "http://localhost:5144/api/";
+        private static readonly string serviceAddress = "http://localhost:7099/api/";
 
         #region Worker Methods
 
