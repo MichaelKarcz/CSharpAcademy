@@ -1,4 +1,5 @@
-﻿using ShiftLogger.API.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ShiftLogger.API.Data;
 using ShiftLogger.API.Interfaces;
 using ShiftLogger.API.Models;
 
@@ -22,12 +23,16 @@ public class WorkerService : IWorkerService
 
     public List<Worker> GetAllWorkers()
     {
-        return _context.Workers.ToList();
+        return _context.Workers
+            .Include(worker => worker.Shifts)
+            .ToList();
     }
 
     public Worker? GetWorkerById(int id)
     {
-        Worker? savedWorker = _context.Workers.Find(id);
+        Worker? savedWorker = _context.Workers
+            .Include(worker => worker.Shifts)
+            .Where(w => w.Id == id).First();
 
         if (savedWorker == null)
         {

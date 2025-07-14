@@ -7,7 +7,7 @@ public class Worker
 
     public Worker()
     {
-        Name = string.Empty;
+        
     }
 
     public Worker(string name)
