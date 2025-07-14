@@ -27,7 +27,7 @@ public class ShiftService : IShiftService
 
     public Shift? GetUnfinishedShiftForWorker(int workerId)
     {
-        return _context.Shifts.Where(sh => sh.WorkerId == workerId && string.IsNullOrEmpty(sh.EndTime)).First();
+        return _context.Shifts.Where(sh => sh.WorkerId == workerId && sh.EndTime == null).First();
     }
 
     public Shift? UpdateShift(int id, Shift updatedShift)

@@ -2,8 +2,8 @@
 internal class Shift
 {
     internal int Id { get; set; }
-    internal string StartTime { get; set; } = DateTime.Now.ToString("MM-dd-yyyy hh:mm tt");
-    internal string? EndTime { get; set; }
+    internal DateTime StartTime { get; set; } = DateTime.Now;
+    internal DateTime? EndTime { get; set; }
     internal required int WorkerId { get; set; }
 
     internal Shift()

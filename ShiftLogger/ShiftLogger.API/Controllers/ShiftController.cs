@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShiftLogger.API.Interfaces;
 using ShiftLogger.API.Models;
 using ShiftLogger.API.Services;
 
