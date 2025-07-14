@@ -2,68 +2,67 @@
 using ShiftLogger.API.Models;
 using ShiftLogger.API.Services;
 
-namespace ShiftLogger.API.Controllers
+namespace ShiftLogger.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class WorkerController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class WorkerController : ControllerBase
+    private readonly IWorkerService _workerService;
+
+    public WorkerController(IWorkerService workerService)
     {
-        private readonly IWorkerService _workerService;
+        _workerService = workerService;
+    }
 
-        public WorkerController(IWorkerService workerService)
+    [HttpPost]
+    public ActionResult<Worker> CreateWorker(Worker worker)
+    {
+        return Ok(_workerService.CreateWorker(worker));
+    }
+
+    [HttpGet]
+    public ActionResult<List<Worker>> GetAllWorkers()
+    {
+        return Ok(_workerService.GetAllWorkers());
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult<Worker> GetWorkerById(int id)
+    {
+        var result = _workerService.GetWorkerById(id);
+
+        if (result == null)
         {
-            _workerService = workerService;
+            return NotFound();
+        }
+        
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<Worker> UpdateWorker(int id, Worker worker)
+    {
+        var result = _workerService.UpdateWorker(id, worker);
+
+        if (result == null)
+        {
+            return NotFound();
         }
 
-        [HttpPost]
-        public ActionResult<Worker> CreateWorker(Worker worker)
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult<string> DeleteWorker(int id)
+    {
+        var result = _workerService.DeleteWorker(id);
+
+        if (result == null)
         {
-            return Ok(_workerService.CreateWorker(worker));
+            return NotFound();
         }
 
-        [HttpGet]
-        public ActionResult<List<Worker>> GetAllWorkers()
-        {
-            return Ok(_workerService.GetAllWorkers());
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Worker> GetWorkerById(int id)
-        {
-            var result = _workerService.GetWorkerById(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        public ActionResult<Worker> UpdateWorker(int id, Worker worker)
-        {
-            var result = _workerService.UpdateWorker(id, worker);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult<string> DeleteWorker(int id)
-        {
-            var result = _workerService.DeleteWorker(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

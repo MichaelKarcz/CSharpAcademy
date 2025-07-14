@@ -2,40 +2,38 @@
 using RestSharp;
 using ShiftLogger.Models;
 
-namespace ShiftLogger.Services
+namespace ShiftLogger.Services;
+internal static class ShiftLoggerAPIService
 {
-    internal static class ShiftLoggerAPIService
+    private static readonly string serviceAddress = "http://localhost:7099/api/";
+
+    #region Worker Methods
+
+    internal static List<Worker> GetAllWorkers()
     {
-        private static readonly string serviceAddress = "http://localhost:7099/api/";
+        var options = new RestClientOptions(serviceAddress);
+        RestClient Client = new RestClient(options);
+        RestRequest request = new RestRequest("Worker");
+        var response = Client.ExecuteAsync(request);
 
-        #region Worker Methods
-
-        internal static List<Worker> GetAllWorkers()
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
-            var options = new RestClientOptions(serviceAddress);
-            RestClient Client = new RestClient(options);
-            RestRequest request = new RestRequest("Worker");
-            var response = Client.ExecuteAsync(request);
+            string rawResponse = response.Result.Content;
+            var serialize = JsonConvert.DeserializeObject<Workers>(rawResponse);
 
-            if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+            List<Worker> workers = serialize.WorkersList;
+
+            Console.Write("Success!");
+            if (workers != null && workers.Count == 0)
             {
-                string rawResponse = response.Result.Content;
-                var serialize = JsonConvert.DeserializeObject<Workers>(rawResponse);
-
-                List<Worker> workers = serialize.WorkersList;
-
-                Console.Write("Success!");
-                if (workers != null && workers.Count == 0)
-                {
-                    Console.WriteLine("No workers to return");
-                }
-
-                return workers;
+                Console.WriteLine("No workers to return");
             }
 
-            else return new List<Worker>();
+            return workers;
         }
 
-        #endregion Worker Methods
+        else return new List<Worker>();
     }
+
+    #endregion Worker Methods
 }

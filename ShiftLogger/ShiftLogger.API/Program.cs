@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShiftLogger.API.Data;
+using ShiftLogger.API.Interfaces;
 using ShiftLogger.API.Services;
 
 namespace ShiftLogger.API

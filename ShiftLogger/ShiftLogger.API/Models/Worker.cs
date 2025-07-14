@@ -1,24 +1,22 @@
-﻿namespace ShiftLogger.API.Models
+﻿namespace ShiftLogger.API.Models;
+public class Worker
 {
-    public class Worker
+    public int Id {  get; set; }
+    public string Name { get; set; } = string.Empty;
+    public List<Shift>? Shifts { get; set; }
+
+    public Worker()
     {
-        public int Id {  get; set; }
-        public string Name { get; set; } = string.Empty;
-        public List<Shift>? Shifts { get; set; }
+        Name = string.Empty;
+    }
 
-        public Worker()
-        {
-            Name = string.Empty;
-        }
+    public Worker(string name)
+    {
+        Name = name;
+    }
 
-        public Worker(string name)
-        {
-            Name = name;
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
+    public override string ToString()
+    {
+        return Name;
     }
 }

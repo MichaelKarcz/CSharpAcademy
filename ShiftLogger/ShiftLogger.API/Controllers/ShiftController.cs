@@ -2,68 +2,67 @@
 using ShiftLogger.API.Models;
 using ShiftLogger.API.Services;
 
-namespace ShiftLogger.API.Controllers
+namespace ShiftLogger.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ShiftController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ShiftController : ControllerBase
+    private readonly IShiftService _shiftService;
+
+    public ShiftController(IShiftService service)
     {
-        private readonly IShiftService _shiftService;
+        _shiftService = service;
+    }
 
-        public ShiftController(IShiftService service)
+    [HttpPost]
+    public ActionResult<Shift> CreateShift(Shift shift)
+    {
+        return Ok(_shiftService.CreateShift(shift));
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult<List<Shift>> GetAllShiftsForWorker(int id)
+    {
+        return Ok(_shiftService.GetAllShiftsForWorker(id));
+    }
+
+    [HttpGet("api/[controller]/unfinished/{id}")]
+    public ActionResult<Shift> GetUnfinishedShiftForWorker(int id)
+    {
+        var result = _shiftService.GetUnfinishedShiftForWorker(id);
+
+        if (result == null)
         {
-            _shiftService = service;
+            return NotFound();
         }
 
-        [HttpPost]
-        public ActionResult<Shift> CreateShift(Shift shift)
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<Shift> UpdateShift(int id, Shift shift)
+    {
+        var result = _shiftService.UpdateShift(id, shift);
+
+        if (result == null)
         {
-            return Ok(_shiftService.CreateShift(shift));
+            return NotFound();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<List<Shift>> GetAllShiftsForWorker(int id)
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult<string> DeleteShift(int id)
+    {
+        var result = _shiftService.DeleteShift(id);
+
+        if (result == null)
         {
-            return Ok(_shiftService.GetAllShiftsForWorker(id));
+            return NotFound();
         }
 
-        [HttpGet("api/[controller]/unfinished/{id}")]
-        public ActionResult<Shift> GetUnfinishedShiftForWorker(int id)
-        {
-            var result = _shiftService.GetUnfinishedShiftForWorker(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        public ActionResult<Shift> UpdateShift(int id, Shift shift)
-        {
-            var result = _shiftService.UpdateShift(id, shift);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult<string> DeleteShift(int id)
-        {
-            var result = _shiftService.DeleteShift(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }
