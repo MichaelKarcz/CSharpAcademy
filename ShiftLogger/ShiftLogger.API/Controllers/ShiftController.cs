@@ -19,7 +19,14 @@ public class ShiftController : ControllerBase
     [HttpPost]
     public ActionResult<Shift> CreateShift(Shift shift)
     {
-        return Ok(_shiftService.CreateShift(shift));
+        try
+        {
+            return Ok(_shiftService.CreateShift(shift));
+        }
+        catch(Exception e)
+        {
+            return BadRequest($"There was an error creating the shift. Additional details: {e.InnerException.Message}");
+        }
     }
 
     [HttpGet("{id}")]
