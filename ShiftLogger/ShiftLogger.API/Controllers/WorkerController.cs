@@ -19,51 +19,90 @@ public class WorkerController : ControllerBase
     [HttpPost]
     public ActionResult<Worker> CreateWorker(Worker worker)
     {
-        return Ok(_workerService.CreateWorker(worker));
+        try
+        {
+            return Ok(_workerService.CreateWorker(worker));
+        }
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error creating the worker. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpGet]
     public ActionResult<List<Worker>> GetAllWorkers()
     {
-        return Ok(_workerService.GetAllWorkers());
+        try
+        {
+            return Ok(_workerService.GetAllWorkers());
+        }
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error retrieving the workers. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpGet("{id}")]
     public ActionResult<Worker> GetWorkerById(int id)
     {
-        var result = _workerService.GetWorkerById(id);
-
-        if (result == null)
+        try
         {
-            return NotFound();
+            var result = _workerService.GetWorkerById(id);
+            if (result == null || result.Id == 0)
+            {
+                return NotFound("There were no workers found with that id.");
+            }
+            return Ok(result);
         }
-        
-        return Ok(result);
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error retrieving the worker. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpPut("{id}")]
     public ActionResult<Worker> UpdateWorker(int id, Worker worker)
     {
-        var result = _workerService.UpdateWorker(id, worker);
-
-        if (result == null)
+        try
         {
-            return NotFound();
+            var result = _workerService.UpdateWorker(id, worker);
+            if (result == null || result.Id == 0)
+            {
+                return NotFound("There were no workers found to update with that id.");
+            }
+            return Ok(result);
         }
-
-        return Ok(result);
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error updating the worker. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpDelete("{id}")]
     public ActionResult<string> DeleteWorker(int id)
     {
-        var result = _workerService.DeleteWorker(id);
-
-        if (result == null)
+        try
         {
-            return NotFound();
+            var result = _workerService.DeleteWorker(id);
+            if (string.IsNullOrEmpty(result))
+            {
+                return NotFound("There were no workers found to delete with that id.");
+            }
+            return Ok(result);
         }
-
-        return Ok(result);
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error deleting the worker. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 }

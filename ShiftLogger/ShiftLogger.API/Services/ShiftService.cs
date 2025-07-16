@@ -26,18 +26,19 @@ public class ShiftService : IShiftService
         return _context.Shifts.Where(sh => sh.WorkerId == workerId).ToList();
     }
 
-    public Shift? GetUnfinishedShiftForWorker(int workerId)
+    public Shift GetUnfinishedShiftForWorker(int workerId)
     {
-        return _context.Shifts.Where(sh => sh.WorkerId == workerId && sh.EndTime == null).First();
+        var results = _context.Shifts.Where(sh => sh.WorkerId == workerId && sh.EndTime == null);
+        return results.Count() > 0 ? results.First() : new Shift(){ WorkerId = workerId };
     }
 
-    public Shift? UpdateShift(int id, Shift updatedShift)
+    public Shift UpdateShift(int id, Shift updatedShift)
     {
         Shift? savedShift = _context.Shifts.Find(id);
 
         if (savedShift == null)
         {
-            return null;
+            return new Shift(){ WorkerId = 0 };
         }
 
         _context.Entry(savedShift).CurrentValues.SetValues(updatedShift);
@@ -46,13 +47,13 @@ public class ShiftService : IShiftService
         return savedShift;
     }
 
-    public string? DeleteShift(int id)
+    public string DeleteShift(int id)
     {
         Shift? savedShift = _context.Shifts.Find(id);
 
         if (savedShift == null)
         {
-            return null;            
+            return string.Empty;            
         }
 
         _context.Shifts.Remove(savedShift);

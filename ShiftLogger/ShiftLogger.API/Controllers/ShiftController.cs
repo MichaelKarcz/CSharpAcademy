@@ -25,52 +25,87 @@ public class ShiftController : ControllerBase
         }
         catch(Exception e)
         {
-            return BadRequest($"There was an error creating the shift. Additional details: {e.InnerException.Message}");
+            string errorMessage = "There was an error creating the shift. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
         }
     }
 
     [HttpGet("{id}")]
     public ActionResult<List<Shift>> GetAllShiftsForWorker(int id)
     {
-        return Ok(_shiftService.GetAllShiftsForWorker(id));
+        try
+        {
+            List<Shift> results = _shiftService.GetAllShiftsForWorker(id);
+            return results.Count > 0 ? Ok(results) : NotFound("There were no shifts found for a worker with that id.");
+        }
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error retrieving the shift. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpGet("api/[controller]/unfinished/{id}")]
     public ActionResult<Shift> GetUnfinishedShiftForWorker(int id)
     {
-        var result = _shiftService.GetUnfinishedShiftForWorker(id);
-
-        if (result == null)
+        try
         {
-            return NotFound();
+            var result = _shiftService.GetUnfinishedShiftForWorker(id);
+            if (result == null || result.Id == 0)
+            {
+                return NotFound("There were no unfinished shifts found for a worker with that id.");
+            }
+            return Ok(result);
         }
-
-        return Ok(result);
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error retrieving the shift. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpPut("{id}")]
     public ActionResult<Shift> UpdateShift(int id, Shift shift)
     {
-        var result = _shiftService.UpdateShift(id, shift);
-
-        if (result == null)
+        try
         {
-            return NotFound();
+            var result = _shiftService.UpdateShift(id, shift);
+            if (result == null || result.Id == 0)
+            {
+                return NotFound("There were no shifts found to update with that id.");
+            }
+            return Ok(result);
         }
-
-        return Ok(result);
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error updating the shift. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpDelete("{id}")]
     public ActionResult<string> DeleteShift(int id)
     {
-        var result = _shiftService.DeleteShift(id);
-
-        if (result == null)
+        try
         {
-            return NotFound();
-        }
+            var result = _shiftService.DeleteShift(id);
 
-        return Ok(result);
+            if (string.IsNullOrEmpty(result))
+            {
+                return NotFound("There were no shifts found to delete with that id.");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            string errorMessage = "There was an error deleting the shift. Additional details: ";
+            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
+            return BadRequest(errorMessage);
+        }
     }
 }

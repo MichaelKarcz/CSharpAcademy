@@ -28,27 +28,26 @@ public class WorkerService : IWorkerService
             .ToList();
     }
 
-    public Worker? GetWorkerById(int id)
+    public Worker GetWorkerById(int id)
     {
-        Worker? savedWorker = _context.Workers
+        var results = _context.Workers
             .Include(worker => worker.Shifts)
-            .Where(w => w.Id == id).First();
+            .Where(w => w.Id == id);
 
-        if (savedWorker == null)
+        if (results == null || results.Count() < 1)
         {
-            return null;
+            return new Worker();
         }
-
-        return savedWorker;
+        return results.First();
     }
 
-    public Worker? UpdateWorker(int id, Worker updatedWorker)
+    public Worker UpdateWorker(int id, Worker updatedWorker)
     {
         Worker? savedWorker = _context.Workers.Find(id);
 
         if (savedWorker == null)
         {
-            return null;
+            return new Worker();
         }
 
         _context.Entry(savedWorker).CurrentValues.SetValues(updatedWorker);
@@ -57,13 +56,13 @@ public class WorkerService : IWorkerService
         return savedWorker;
     }
 
-    public string? DeleteWorker(int id)
+    public string DeleteWorker(int id)
     {
         Worker? savedWorker = _context.Workers.Find(id);
 
         if (savedWorker == null)
         {
-            return null;
+            return string.Empty;
         }
 
         _context.Remove(savedWorker);
