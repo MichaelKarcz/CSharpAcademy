@@ -5,29 +5,43 @@ using ShiftLogger.Models;
 namespace ShiftLogger.Services;
 internal static class ShiftLoggerAPIService
 {
-    private static readonly string serviceAddress = "http://localhost:7099/api/";
+    private static readonly string serviceAddress = "https://localhost:7099/api/";
 
     #region Worker Methods
 
+    internal static bool CreateWorker(Worker worker)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest("Worker");
+        request.AddJsonBody(JsonConvert.SerializeObject(worker));
+        var response = client.ExecutePostAsync(request);
+
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            return true;
+        }
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            return false;
+        }
+
+        return false;
+    }
+
     internal static List<Worker> GetAllWorkers()
     {
-        var options = new RestClientOptions(serviceAddress);
-        RestClient Client = new RestClient(options);
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
         RestRequest request = new RestRequest("Worker");
-        var response = Client.ExecuteAsync(request);
+        var response = client.ExecuteAsync(request);
 
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
             string rawResponse = response.Result.Content;
-            var serialize = JsonConvert.DeserializeObject<Workers>(rawResponse);
+            List<Worker>? workers = JsonConvert.DeserializeObject<List<Worker>>(rawResponse);
 
-            List<Worker> workers = serialize.WorkersList;
-
-            Console.Write("Success!");
-            if (workers != null && workers.Count == 0)
-            {
-                Console.WriteLine("No workers to return");
-            }
+            if (workers == null) workers = new List<Worker>();
 
             return workers;
         }

@@ -1,19 +1,15 @@
 ﻿using Newtonsoft.Json;
 
 namespace ShiftLogger.Models;
+
 internal class Worker
 {
-    internal int Id { get; set; }
-    internal string Name { get; set; } = string.Empty;
+    [JsonProperty("id")] internal int Id { get; set; }
+    [JsonProperty("name")] internal string Name { get; set; } = string.Empty;
+    [JsonProperty("shifts")] internal List<Shift>? Shifts { get; set; }
     
     internal Worker()
     {
 
     }
-}
-
-internal class Workers
-{
-    [JsonProperty("workers")]
-    internal List<Worker> WorkersList;
 }
