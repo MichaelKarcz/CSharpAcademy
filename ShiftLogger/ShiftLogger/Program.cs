@@ -1,4 +1,5 @@
-﻿using ShiftLogger.Models;
+﻿using ShiftLogger.Controllers;
+using ShiftLogger.Models;
 using ShiftLogger.Services;
 
 namespace ShiftLogger;
@@ -8,11 +9,13 @@ public class Program()
     {
         Console.WriteLine("Starting App...\n\n");
 
+        MenuController.RunMainMenuLoop();
+        
         //TestPostWorker();
 
         //TestGetAllWorkers();
-        List<Worker> workers = ShiftLoggerAPIService.GetAllWorkers();
-        DisplayAllWorkers(workers);
+        //List<Worker> workers = ShiftLoggerAPIService.GetAllWorkers();
+        //DisplayAllWorkers(workers);
 
         Console.WriteLine("\n\nEnd of app...");
     }

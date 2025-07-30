@@ -45,9 +45,51 @@ internal static class ShiftLoggerAPIService
 
             return workers;
         }
-
         else return new List<Worker>();
     }
 
+    internal static Worker GetWorkerById(int workerId)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Worker/{workerId}");
+        var response = client.ExecuteAsync(request);
+        // TODO: Finish figuring out why this breaks when getting worker by Id
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string? rawResponse = response.Result.Content;
+            if (string.IsNullOrEmpty(rawResponse)) return new Worker();
+            List<Worker>? workers = JsonConvert.DeserializeObject<List<Worker>>(rawResponse);
+
+            if (workers == null || workers.Count == 0) return new Worker();
+
+            return workers.First();
+        }
+        else return new Worker();
+    }
+
     #endregion Worker Methods
+
+    #region Shift Methods
+
+    internal static List<Shift> GetAllShiftsForWorker(Worker worker)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Shift/{worker.Id}");
+        var response = client.ExecuteAsync(request);
+
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string rawResponse = response.Result.Content;
+            List<Shift>? shifts = JsonConvert.DeserializeObject<List<Shift>>(rawResponse);
+
+            if (shifts == null) shifts = new List<Shift>();
+
+            return shifts;
+        }
+        else return new List<Shift>();
+    }
+
+    #endregion Shift Methods
 }
