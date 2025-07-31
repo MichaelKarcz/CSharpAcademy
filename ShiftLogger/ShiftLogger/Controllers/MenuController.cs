@@ -73,7 +73,7 @@ internal static class MenuController
             {
                 case 0:
                     logout = true;
-                    loggedInWorker = new Worker();
+                    loggedInWorker = null;
                     break;
                 case 1:
 
@@ -90,6 +90,8 @@ internal static class MenuController
             }
         }
     }
+
+    #region MainMenu Methods
 
     internal static void ViewAllWorkers()
     {
@@ -149,5 +151,12 @@ internal static class MenuController
         return worker;
 
     }
-    
+
+    #endregion MainMenu Methods
+
+    #region LoggedInMenu Methods
+
+
+
+    #endregion
 }

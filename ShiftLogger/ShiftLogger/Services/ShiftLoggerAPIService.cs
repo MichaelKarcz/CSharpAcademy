@@ -54,16 +54,15 @@ internal static class ShiftLoggerAPIService
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Worker/{workerId}");
         var response = client.ExecuteAsync(request);
-        // TODO: Finish figuring out why this breaks when getting worker by Id
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
             string? rawResponse = response.Result.Content;
             if (string.IsNullOrEmpty(rawResponse)) return new Worker();
-            List<Worker>? workers = JsonConvert.DeserializeObject<List<Worker>>(rawResponse);
+            Worker? worker = JsonConvert.DeserializeObject<Worker>(rawResponse);
 
-            if (workers == null || workers.Count == 0) return new Worker();
+            if (worker == null) return new Worker();
 
-            return workers.First();
+            return worker;
         }
         else return new Worker();
     }
