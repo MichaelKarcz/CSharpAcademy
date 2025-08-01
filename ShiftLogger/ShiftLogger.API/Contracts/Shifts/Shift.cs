@@ -1,4 +1,4 @@
-﻿namespace ShiftLogger.API.Models;
+﻿namespace ShiftLogger.API.Contracts.Shifts;
 
 public class Shift
 {

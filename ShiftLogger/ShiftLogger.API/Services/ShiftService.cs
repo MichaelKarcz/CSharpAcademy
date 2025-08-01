@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShiftLogger.API.Contracts.Shifts;
 using ShiftLogger.API.Data;
 using ShiftLogger.API.Interfaces;
-using ShiftLogger.API.Models;
 
 namespace ShiftLogger.API.Services;
 
@@ -14,37 +14,38 @@ public class ShiftService : IShiftService
         _context = context;
     }
 
-    public Shift CreateShift(Shift shift)
+    public ShiftDto CreateShift(Shift shift)
     {
         var savedShift = _context.Add(shift);
         _context.SaveChanges();
-        return savedShift.Entity;
+        return savedShift.Entity.ToDto();
     }
 
-    public List<Shift> GetAllShiftsForWorker(int workerId)
+    public List<ShiftDto> GetAllShiftsForWorker(int workerId)
     {
-        return _context.Shifts.Where(sh => sh.WorkerId == workerId).ToList();
+        List<Shift> resultsList = _context.Shifts.Where(sh => sh.WorkerId == workerId).ToList();
+        return resultsList.Select(shift => shift.ToDto()).ToList();
     }
 
-    public Shift GetUnfinishedShiftForWorker(int workerId)
+    public ShiftDto GetUnfinishedShiftForWorker(int workerId)
     {
         var results = _context.Shifts.Where(sh => sh.WorkerId == workerId && sh.EndTime == null);
-        return results.Count() > 0 ? results.First() : new Shift(){ WorkerId = workerId };
+        return results.Count() > 0 ? results.First().ToDto() : new ShiftDto(){ WorkerId = workerId };
     }
 
-    public Shift UpdateShift(int id, Shift updatedShift)
+    public ShiftDto UpdateShift(int id, Shift updatedShift)
     {
         Shift? savedShift = _context.Shifts.Find(id);
 
         if (savedShift == null)
         {
-            return new Shift(){ WorkerId = 0 };
+            return new ShiftDto(){ WorkerId = 0 };
         }
 
         _context.Entry(savedShift).CurrentValues.SetValues(updatedShift);
         _context.SaveChanges();
 
-        return savedShift;
+        return savedShift.ToDto();
     }
 
     public string DeleteShift(int id)

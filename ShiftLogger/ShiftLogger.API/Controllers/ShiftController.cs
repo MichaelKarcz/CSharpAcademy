@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShiftLogger.API.Contracts.Shifts;
 using ShiftLogger.API.Interfaces;
-using ShiftLogger.API.Models;
-using ShiftLogger.API.Services;
 
 namespace ShiftLogger.API.Controllers;
 
@@ -32,11 +31,11 @@ public class ShiftController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<List<Shift>> GetAllShiftsForWorker(int id)
+    public ActionResult<List<ShiftDto>> GetAllShiftsForWorker(int id)
     {
         try
         {
-            List<Shift> results = _shiftService.GetAllShiftsForWorker(id);
+            List<ShiftDto> results = _shiftService.GetAllShiftsForWorker(id);
             return results.Count > 0 ? Ok(results) : NotFound("There were no shifts found for a worker with that id.");
         }
         catch (Exception e)
@@ -48,12 +47,12 @@ public class ShiftController : ControllerBase
     }
 
     [HttpGet("api/[controller]/unfinished/{id}")]
-    public ActionResult<Shift> GetUnfinishedShiftForWorker(int id)
+    public ActionResult<ShiftDto> GetUnfinishedShiftForWorker(int id)
     {
         try
         {
             var result = _shiftService.GetUnfinishedShiftForWorker(id);
-            if (result == null || result.Id == 0)
+            if (result == null || result.WorkerId == 0)
             {
                 return NotFound("There were no unfinished shifts found for a worker with that id.");
             }
@@ -73,7 +72,7 @@ public class ShiftController : ControllerBase
         try
         {
             var result = _shiftService.UpdateShift(id, shift);
-            if (result == null || result.Id == 0)
+            if (result == null || result.WorkerId == 0)
             {
                 return NotFound("There were no shifts found to update with that id.");
             }

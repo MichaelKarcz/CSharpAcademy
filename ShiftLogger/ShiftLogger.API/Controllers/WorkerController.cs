@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShiftLogger.API.Contracts.Worker;
 using ShiftLogger.API.Interfaces;
-using ShiftLogger.API.Models;
-using ShiftLogger.API.Services;
 
 namespace ShiftLogger.API.Controllers;
 
@@ -17,7 +16,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Worker> CreateWorker(Worker worker)
+    public ActionResult<WorkerDto> CreateWorker(Worker worker)
     {
         try
         {
@@ -32,7 +31,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Worker>> GetAllWorkers()
+    public ActionResult<List<WorkerDto>> GetAllWorkers()
     {
         try
         {
@@ -47,12 +46,12 @@ public class WorkerController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Worker> GetWorkerById(int id)
+    public ActionResult<WorkerDto> GetWorkerById(int id)
     {
         try
         {
             var result = _workerService.GetWorkerById(id);
-            if (result == null || result.Id == 0)
+            if (result == null || String.IsNullOrEmpty(result.Name))
             {
                 return NotFound("There were no workers found with that id.");
             }
@@ -67,12 +66,12 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Worker> UpdateWorker(int id, Worker worker)
+    public ActionResult<WorkerDto> UpdateWorker(int id, Worker worker)
     {
         try
         {
             var result = _workerService.UpdateWorker(id, worker);
-            if (result == null || result.Id == 0)
+            if (result == null || String.IsNullOrEmpty(result.Name))
             {
                 return NotFound("There were no workers found to update with that id.");
             }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShiftLogger.API.Contracts.Worker;
 using ShiftLogger.API.Data;
 using ShiftLogger.API.Interfaces;
-using ShiftLogger.API.Models;
 
 namespace ShiftLogger.API.Services;
 
@@ -14,21 +14,25 @@ public class WorkerService : IWorkerService
         _context = context;
     }
 
-    public Worker CreateWorker(Worker worker)
+    public WorkerDto CreateWorker(Worker worker)
     {
         var addedWorker = _context.Workers.Add(worker);
         _context.SaveChanges();
-        return addedWorker.Entity;
+        return addedWorker.Entity.ToDto();
     }
 
-    public List<Worker> GetAllWorkers()
+    public List<WorkerDto> GetAllWorkers()
     {
-        return _context.Workers
+        List<Worker> resultsList = _context.Workers
             .Include(worker => worker.Shifts)
             .ToList();
+
+        if (resultsList.Count == 0) return new List<WorkerDto>();
+
+        return resultsList.Select(worker => worker.ToDto()).ToList();
     }
 
-    public Worker GetWorkerById(int id)
+    public WorkerDto GetWorkerById(int id)
     {
         var results = _context.Workers
             .Include(worker => worker.Shifts)
@@ -36,24 +40,38 @@ public class WorkerService : IWorkerService
 
         if (results == null || results.Count() < 1)
         {
-            return new Worker();
+            return new WorkerDto();
         }
-        return results.First();
+        return results.First().ToDto();
     }
 
-    public Worker UpdateWorker(int id, Worker updatedWorker)
+    public WorkerDto GetWorkerByUsername(string username)
+    {
+        var results = _context.Workers
+            .Include(worker => worker.Shifts)
+            .Where(w => w.Username == username);
+
+        if (results == null || results.Count() < 1)
+        {
+            return new WorkerDto();
+        }
+
+        return results.First().ToDto();
+    }
+
+    public WorkerDto UpdateWorker(int id, Worker updatedWorker)
     {
         Worker? savedWorker = _context.Workers.Find(id);
 
         if (savedWorker == null)
         {
-            return new Worker();
+            return new WorkerDto();
         }
 
         _context.Entry(savedWorker).CurrentValues.SetValues(updatedWorker);
         _context.SaveChanges();
 
-        return savedWorker;
+        return savedWorker.ToDto();
     }
 
     public string DeleteWorker(int id)
