@@ -17,4 +17,11 @@ public class ShiftLoggerDbContext : DbContext
     {
 
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Worker>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+    }
 }

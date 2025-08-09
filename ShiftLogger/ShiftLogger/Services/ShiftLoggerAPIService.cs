@@ -75,7 +75,7 @@ internal static class ShiftLoggerAPIService
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
-        RestRequest request = new RestRequest($"Shift/{worker.Id}");
+        RestRequest request = new RestRequest($"Shift/{worker.Username}");
         var response = client.ExecuteAsync(request);
 
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)

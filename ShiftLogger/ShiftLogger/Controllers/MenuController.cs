@@ -45,7 +45,7 @@ internal static class MenuController
         AnsiConsole.Clear();
         Worker loggedInWorker = LoginPrompt();
 
-        if (loggedInWorker == null || loggedInWorker.Id == 0)
+        if (loggedInWorker == null || string.IsNullOrEmpty(loggedInWorker.Username))
         {
             return;
         }
@@ -106,11 +106,11 @@ internal static class MenuController
         }
 
         Table table = new Table();
-        table.AddColumn(new TableColumn("Worker Id").Centered().NoWrap());
+        table.AddColumn(new TableColumn("Username").Centered().NoWrap());
         table.AddColumn(new TableColumn("Name").Centered().NoWrap());
         foreach (Worker worker in allWorkers)
         {
-            table.AddRow(worker.Id.ToString(), worker.Name);
+            table.AddRow(worker.Username, worker.Name);
         }
         table.Border(TableBorder.Heavy);
         table.ShowRowSeparators();
