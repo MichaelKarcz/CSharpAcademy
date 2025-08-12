@@ -12,8 +12,8 @@ using ShiftLogger.API.Data;
 namespace ShiftLogger.API.Migrations
 {
     [DbContext(typeof(ShiftLoggerDbContext))]
-    [Migration("20250809222855_AddWorkerUsernameUnique")]
-    partial class AddWorkerUsernameUnique
+    [Migration("20250812194207_AddWorkerToShift")]
+    partial class AddWorkerToShift
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,7 @@ namespace ShiftLogger.API.Migrations
                     b.ToTable("Shifts");
                 });
 
-            modelBuilder.Entity("ShiftLogger.API.Contracts.Worker.Worker", b =>
+            modelBuilder.Entity("ShiftLogger.API.Contracts.Workers.Worker", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,28 +61,23 @@ namespace ShiftLogger.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("Username")
-                        .IsUnique();
 
                     b.ToTable("Workers");
                 });
 
             modelBuilder.Entity("ShiftLogger.API.Contracts.Shifts.Shift", b =>
                 {
-                    b.HasOne("ShiftLogger.API.Contracts.Worker.Worker", null)
+                    b.HasOne("ShiftLogger.API.Contracts.Workers.Worker", "Worker")
                         .WithMany("Shifts")
                         .HasForeignKey("WorkerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Worker");
                 });
 
-            modelBuilder.Entity("ShiftLogger.API.Contracts.Worker.Worker", b =>
+            modelBuilder.Entity("ShiftLogger.API.Contracts.Workers.Worker", b =>
                 {
                     b.Navigation("Shifts");
                 });

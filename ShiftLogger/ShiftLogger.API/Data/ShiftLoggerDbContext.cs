@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShiftLogger.API.Contracts.Shifts;
-using ShiftLogger.API.Contracts.Worker;
+using ShiftLogger.API.Contracts.Workers;
 
 namespace ShiftLogger.API.Data;
 public class ShiftLoggerDbContext : DbContext
@@ -16,12 +16,5 @@ public class ShiftLoggerDbContext : DbContext
     public ShiftLoggerDbContext(DbContextOptions<ShiftLoggerDbContext> options) : base(options)
     {
 
-    }
-
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        builder.Entity<Worker>()
-            .HasIndex(u => u.Username)
-            .IsUnique();
     }
 }

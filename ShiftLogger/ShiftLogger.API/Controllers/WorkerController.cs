@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShiftLogger.API.Contracts.Worker;
+using ShiftLogger.API.Contracts.Workers;
 using ShiftLogger.API.Interfaces;
 
 namespace ShiftLogger.API.Controllers;
@@ -51,26 +51,6 @@ public class WorkerController : ControllerBase
         try
         {
             var result = _workerService.GetWorkerById(id);
-            if (result == null || String.IsNullOrEmpty(result.Name))
-            {
-                return NotFound("There were no workers found with that id.");
-            }
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            string errorMessage = "There was an error retrieving the worker. Additional details: ";
-            errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
-            return BadRequest(errorMessage);
-        }
-    }
-
-    [HttpGet("/username/{username}")]
-    public ActionResult<WorkerDto> GetWorkerByUsername(string username)
-    {
-        try
-        {
-            var result = _workerService.GetWorkerByUsername(username);
             if (result == null || String.IsNullOrEmpty(result.Name))
             {
                 return NotFound("There were no workers found with that id.");

@@ -1,10 +1,10 @@
 ﻿using ShiftLogger.API.Contracts.Shifts;
 
-namespace ShiftLogger.API.Contracts.Worker
+namespace ShiftLogger.API.Contracts.Workers
 {
     public static class WorkerMapper
     {
         public static WorkerDto ToDto(this Worker worker) =>
-            new WorkerDto() { Username = worker.Username, Name = worker.Name, Shifts = worker.Shifts};
+            new WorkerDto() { Id = worker.Id, Name = worker.Name, Shifts = worker.Shifts};
     }
 }

@@ -23,13 +23,13 @@ public class ShiftService : IShiftService
 
     public List<ShiftDto> GetAllShiftsForWorker(int workerId)
     {
-        List<Shift> resultsList = _context.Shifts.Where(sh => sh.WorkerId == workerId).ToList();
+        List<Shift> resultsList = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId).ToList();
         return resultsList.Select(shift => shift.ToDto()).ToList();
     }
 
     public ShiftDto GetUnfinishedShiftForWorker(int workerId)
     {
-        var results = _context.Shifts.Where(sh => sh.WorkerId == workerId && sh.EndTime == null);
+        var results = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId && sh.EndTime == null);
         return results.Count() > 0 ? results.First().ToDto() : new ShiftDto(){ WorkerId = workerId };
     }
 

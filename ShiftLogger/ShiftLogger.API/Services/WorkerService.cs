@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShiftLogger.API.Contracts.Worker;
+using ShiftLogger.API.Contracts.Workers;
 using ShiftLogger.API.Data;
 using ShiftLogger.API.Interfaces;
 
@@ -42,20 +42,6 @@ public class WorkerService : IWorkerService
         {
             return new WorkerDto();
         }
-        return results.First().ToDto();
-    }
-
-    public WorkerDto GetWorkerByUsername(string username)
-    {
-        var results = _context.Workers
-            .Include(worker => worker.Shifts)
-            .Where(w => w.Username == username);
-
-        if (results == null || results.Count() < 1)
-        {
-            return new WorkerDto();
-        }
-
         return results.First().ToDto();
     }
 
