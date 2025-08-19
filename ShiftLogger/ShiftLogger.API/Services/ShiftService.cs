@@ -14,38 +14,33 @@ public class ShiftService : IShiftService
         _context = context;
     }
 
-    public ShiftDto CreateShift(Shift shift)
+    public Shift CreateShift(Shift shift)
     {
         var savedShift = _context.Add(shift);
         _context.SaveChanges();
-        return savedShift.Entity.ToDto();
+        return savedShift.Entity;
     }
 
-    public List<ShiftDto> GetAllShiftsForWorker(int workerId)
+    public List<Shift> GetAllShiftsForWorker(int workerId)
     {
         List<Shift> resultsList = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId).ToList();
-        return resultsList.Select(shift => shift.ToDto()).ToList();
+        return resultsList;
     }
 
-    public ShiftDto GetUnfinishedShiftForWorker(int workerId)
+    public Shift? GetUnfinishedShiftForWorker(int workerId)
     {
         var results = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId && sh.EndTime == null);
-        return results.Count() > 0 ? results.First().ToDto() : new ShiftDto(){ WorkerId = workerId };
+        return results.Count() > 0 ? results.First() : null;
     }
 
-    public ShiftDto UpdateShift(int id, Shift updatedShift)
+    public Shift? UpdateShift(int id, Shift updatedShift)
     {
         Shift? savedShift = _context.Shifts.Find(id);
-
-        if (savedShift == null)
-        {
-            return new ShiftDto(){ WorkerId = 0 };
-        }
 
         _context.Entry(savedShift).CurrentValues.SetValues(updatedShift);
         _context.SaveChanges();
 
-        return savedShift.ToDto();
+        return savedShift;
     }
 
     public string DeleteShift(int id)

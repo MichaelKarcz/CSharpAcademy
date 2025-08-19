@@ -14,25 +14,25 @@ public class WorkerService : IWorkerService
         _context = context;
     }
 
-    public WorkerDto CreateWorker(Worker worker)
+    public Worker CreateWorker(Worker worker)
     {
         var addedWorker = _context.Workers.Add(worker);
         _context.SaveChanges();
-        return addedWorker.Entity.ToDto();
+        return addedWorker.Entity;
     }
 
-    public List<WorkerDto> GetAllWorkers()
+    public List<Worker> GetAllWorkers()
     {
         List<Worker> resultsList = _context.Workers
             .Include(worker => worker.Shifts)
             .ToList();
 
-        if (resultsList.Count == 0) return new List<WorkerDto>();
+        if (resultsList.Count == 0) return new List<Worker>();
 
-        return resultsList.Select(worker => worker.ToDto()).ToList();
+        return resultsList;
     }
 
-    public WorkerDto GetWorkerById(int id)
+    public Worker? GetWorkerById(int id)
     {
         var results = _context.Workers
             .Include(worker => worker.Shifts)
@@ -40,24 +40,24 @@ public class WorkerService : IWorkerService
 
         if (results == null || results.Count() < 1)
         {
-            return new WorkerDto();
+            return null;
         }
-        return results.First().ToDto();
+        return results.First();
     }
 
-    public WorkerDto UpdateWorker(int id, Worker updatedWorker)
+    public Worker? UpdateWorker(int id, Worker updatedWorker)
     {
         Worker? savedWorker = _context.Workers.Find(id);
 
         if (savedWorker == null)
         {
-            return new WorkerDto();
+            return null;
         }
 
         _context.Entry(savedWorker).CurrentValues.SetValues(updatedWorker);
         _context.SaveChanges();
 
-        return savedWorker.ToDto();
+        return savedWorker;
     }
 
     public string DeleteWorker(int id)
