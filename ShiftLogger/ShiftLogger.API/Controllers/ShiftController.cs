@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLogger.API.Contracts.Shifts;
+using ShiftLogger.API.Contracts.Workers;
 using ShiftLogger.API.Interfaces;
 
 namespace ShiftLogger.API.Controllers;
@@ -9,18 +10,34 @@ namespace ShiftLogger.API.Controllers;
 public class ShiftController : ControllerBase
 {
     private readonly IShiftService _shiftService;
+    private readonly IWorkerService _workerService;
 
-    public ShiftController(IShiftService service)
+    public ShiftController(IShiftService service, IWorkerService workerService)
     {
         _shiftService = service;
+        _workerService = workerService;
     }
 
     [HttpPost]
-    public ActionResult<Shift> CreateShift(Shift shift)
+    public ActionResult<ShiftDto> CreateShift(CreateShiftDto createShiftDto)
     {
         try
         {
-            return Ok(_shiftService.CreateShift(shift));
+            Worker? worker = _workerService.GetWorkerById(createShiftDto.WorkerId);
+            if (worker == null)
+            {
+                return BadRequest(new { error = $"The shift could not be created because a worker could not be found with the provided Id: {createShiftDto.WorkerId}" });
+            }
+
+            Shift result = _shiftService.CreateShift(new Shift
+            {
+                StartTime = createShiftDto.StartTime,
+                EndTime = createShiftDto.EndTime,
+                WorkerId = worker.Id,
+                Worker = worker
+            });
+
+            return Ok(result.ToDto());
         }
         catch(Exception e)
         {
@@ -30,17 +47,21 @@ public class ShiftController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<List<ShiftDto>> GetAllShiftsForWorker(int id)
+    [HttpGet("{workerId}")]
+    public ActionResult<List<ShiftDto>> GetAllShiftsForWorker(int workerId)
     {
         try
         {
-            List<ShiftDto> results = _shiftService.GetAllShiftsForWorker(id);
-            return results.Count > 0 ? Ok(results) : NotFound("There were no shifts found for a worker with that id.");
+            List<Shift> results = _shiftService.GetAllShiftsForWorker(workerId);
+            if (results == null || results.Count < 1)
+            {
+                return NotFound($"There were no shifts found for a worker with Id: {workerId}.");
+            }
+            return Ok(results.Select(sh => sh.ToDto()).ToList());
         }
         catch (Exception e)
         {
-            string errorMessage = "There was an error retrieving the shift. Additional details: ";
+            string errorMessage = "There was an error retrieving the shifts. Additional details: ";
             errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
             return BadRequest(errorMessage);
         }
@@ -51,12 +72,12 @@ public class ShiftController : ControllerBase
     {
         try
         {
-            var result = _shiftService.GetUnfinishedShiftForWorker(id);
-            if (result == null || result.WorkerId == 0)
+            Shift? result = _shiftService.GetUnfinishedShiftForWorker(id);
+            if (result == null)
             {
-                return NotFound("There were no unfinished shifts found for a worker with that id.");
+                return NotFound($"There were no unfinished shifts found for a worker with Id: {id}.");
             }
-            return Ok(result);
+            return Ok(result.ToDto());
         }
         catch (Exception e)
         {
@@ -67,16 +88,20 @@ public class ShiftController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Shift> UpdateShift(int id, Shift shift)
+    public ActionResult<Shift> UpdateShift(int id, UpdateShiftDto shift)
     {
         try
         {
-            var result = _shiftService.UpdateShift(id, shift);
-            if (result == null || result.WorkerId == 0)
+            // TODO: Finish updating this to verify that the shift exists, and then passing in
+            // a new shift with all of the data between the given shift and the found shift
+            Shift? shiftToUpdate = _shiftService.GetShiftById(id);
+
+            Shift? result = _shiftService.UpdateShift(id, new Shift {StartTime = shift.StartTime, EndTime = shift.EndTime));
+            if (result == null)
             {
                 return NotFound("There were no shifts found to update with that id.");
             }
-            return Ok(result);
+            return Ok(result.ToDto());
         }
         catch (Exception e)
         {
@@ -91,7 +116,7 @@ public class ShiftController : ControllerBase
     {
         try
         {
-            var result = _shiftService.DeleteShift(id);
+            string result = _shiftService.DeleteShift(id);
 
             if (string.IsNullOrEmpty(result))
             {

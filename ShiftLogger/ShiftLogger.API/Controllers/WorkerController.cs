@@ -16,11 +16,17 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<WorkerDto> CreateWorker(Worker worker)
+    public ActionResult<WorkerDto> CreateWorker(CreateWorkerDto createWorkerDto)
     {
         try
         {
-            return Ok(_workerService.CreateWorker(worker));
+            Worker createdWorker = _workerService.CreateWorker(new Worker { Name = createWorkerDto.Name });
+
+            if (createdWorker == null)
+            {
+                return NotFound($"There was an error creating worker \"{createWorkerDto.Name}\".");
+            }
+            return Ok(createdWorker.ToDto());
         }
         catch (Exception e)
         {
@@ -35,7 +41,16 @@ public class WorkerController : ControllerBase
     {
         try
         {
-            return Ok(_workerService.GetAllWorkers());
+            List<Worker> result = _workerService.GetAllWorkers();
+
+            if (result == null || result.Count < 1)
+            {
+                return NotFound("There were no workers to retrieve.");
+            }
+
+            List<WorkerDto> dtoList = result.Select(w => w.ToDto()).ToList();
+
+            return Ok(dtoList);
         }
         catch (Exception e)
         {
@@ -51,11 +66,11 @@ public class WorkerController : ControllerBase
         try
         {
             var result = _workerService.GetWorkerById(id);
-            if (result == null || String.IsNullOrEmpty(result.Name))
+            if (result == null)
             {
-                return NotFound("There were no workers found with that id.");
+                return NotFound($"There were no workers found with id: {id}.");
             }
-            return Ok(result);
+            return Ok(result.ToDto());
         }
         catch (Exception e)
         {
@@ -66,16 +81,16 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<WorkerDto> UpdateWorker(int id, Worker worker)
+    public ActionResult<WorkerDto> UpdateWorker(int id, UpdateWorkerDto updateWorkerDto)
     {
         try
         {
-            var result = _workerService.UpdateWorker(id, worker);
-            if (result == null || String.IsNullOrEmpty(result.Name))
+            var result = _workerService.UpdateWorker(id, new Worker { Id = updateWorkerDto.Id, Name = updateWorkerDto.Name});
+            if (result == null)
             {
-                return NotFound("There were no workers found to update with that id.");
+                return NotFound($"There were no workers found to update with Id: {id}.");
             }
-            return Ok(result);
+            return Ok(result.ToDto());
         }
         catch (Exception e)
         {
