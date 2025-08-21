@@ -21,6 +21,18 @@ public class ShiftService : IShiftService
         return savedShift.Entity;
     }
 
+    public Shift? GetShiftById(int id)
+    {
+        var results = _context.Shifts
+            .Where(sh => sh.Id == id);
+
+        if (results == null || results.Count() < 1)
+        {
+            return null;
+        }
+        return results.First();
+    }
+
     public List<Shift> GetAllShiftsForWorker(int workerId)
     {
         List<Shift> resultsList = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId).ToList();

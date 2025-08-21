@@ -67,15 +67,15 @@ public class ShiftController : ControllerBase
         }
     }
 
-    [HttpGet("api/[controller]/unfinished/{id}")]
-    public ActionResult<ShiftDto> GetUnfinishedShiftForWorker(int id)
+    [HttpGet("api/[controller]/unfinished/{workerId}")]
+    public ActionResult<ShiftDto> GetUnfinishedShiftForWorker(int workerId)
     {
         try
         {
-            Shift? result = _shiftService.GetUnfinishedShiftForWorker(id);
+            Shift? result = _shiftService.GetUnfinishedShiftForWorker(workerId);
             if (result == null)
             {
-                return NotFound($"There were no unfinished shifts found for a worker with Id: {id}.");
+                return NotFound($"There were no unfinished shifts found for a worker with Id: {workerId}.");
             }
             return Ok(result.ToDto());
         }
@@ -92,14 +92,24 @@ public class ShiftController : ControllerBase
     {
         try
         {
-            // TODO: Finish updating this to verify that the shift exists, and then passing in
-            // a new shift with all of the data between the given shift and the found shift
-            Shift? shiftToUpdate = _shiftService.GetShiftById(id);
+            Shift? existingShift = _shiftService.GetShiftById(id);
+            if (existingShift == null)
+            {
+                return NotFound($"There were no shifts found to update with Id: {id}.");
+            }
 
-            Shift? result = _shiftService.UpdateShift(id, new Shift {StartTime = shift.StartTime, EndTime = shift.EndTime));
+            Shift updatedShift = new Shift { 
+                Id = existingShift.Id,
+                StartTime = shift.StartTime,
+                EndTime = shift.EndTime,
+                WorkerId = existingShift.WorkerId,
+                Worker = existingShift.Worker 
+            };
+
+            Shift? result = _shiftService.UpdateShift(id, updatedShift);
             if (result == null)
             {
-                return NotFound("There were no shifts found to update with that id.");
+                return NotFound($"There were no shifts found to update with Id: {id}.");
             }
             return Ok(result.ToDto());
         }
