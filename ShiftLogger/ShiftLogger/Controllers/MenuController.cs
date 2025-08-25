@@ -1,4 +1,5 @@
-﻿using ShiftLogger.Models;
+﻿using ShiftLogger.Contracts.Responses.Shifts;
+using ShiftLogger.Contracts.Responses.Workers;
 using ShiftLogger.Services;
 using Spectre.Console;
 
@@ -43,9 +44,9 @@ internal static class MenuController
     internal static void RunMainLoggedInMenu()
     {
         AnsiConsole.Clear();
-        Worker loggedInWorker = LoginPrompt();
+        WorkerResponse loggedInWorker = LoginPrompt();
 
-        if (loggedInWorker == null || string.IsNullOrEmpty(loggedInWorker.Username))
+        if (loggedInWorker == null || string.IsNullOrEmpty(loggedInWorker.Name))
         {
             return;
         }
@@ -97,7 +98,7 @@ internal static class MenuController
     {
         AnsiConsole.Clear();
 
-        List<Worker> allWorkers = ShiftLoggerAPIService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = ShiftLoggerAPIService.GetAllWorkers();
 
         if (allWorkers.Count == 0)
         {
@@ -106,11 +107,11 @@ internal static class MenuController
         }
 
         Table table = new Table();
-        table.AddColumn(new TableColumn("Username").Centered().NoWrap());
+        table.AddColumn(new TableColumn("Id").Centered().NoWrap());
         table.AddColumn(new TableColumn("Name").Centered().NoWrap());
-        foreach (Worker worker in allWorkers)
+        foreach (WorkerResponse worker in allWorkers)
         {
-            table.AddRow(worker.Username, worker.Name);
+            table.AddRow(worker.Id.ToString(), worker.Name);
         }
         table.Border(TableBorder.Heavy);
         table.ShowRowSeparators();
@@ -119,11 +120,11 @@ internal static class MenuController
 
     }
 
-    internal static Worker LoginPrompt()
+    internal static WorkerResponse LoginPrompt()
     {
         int workerId = AnsiConsole.Prompt<int>(new TextPrompt<int>("\nEnter your worker Id: ")
             .ValidationErrorMessage("Please enter an Id. Your input should be a number."));
-        Worker worker = ShiftLoggerAPIService.GetWorkerById(workerId);
+        WorkerResponse worker = ShiftLoggerAPIService.GetWorkerById(workerId);
 
         while (string.IsNullOrEmpty(worker.Name) && workerId != 0)
         {
@@ -132,17 +133,17 @@ internal static class MenuController
         }
 
         AnsiConsole.Clear();
-        return worker ?? new Worker();
+        return worker ?? new WorkerResponse();
     }
 
-    internal static Worker SelectWorker(List<Worker> workers)
+    internal static WorkerResponse SelectWorker(List<WorkerResponse> workers)
     {
         if (workers == null || workers.Count == 0)
         {
             AnsiConsole.WriteLine("There are no workers to choose from for this operation.");
-            return new Worker();
+            return new WorkerResponse();
         }
-        Worker worker = AnsiConsole.Prompt(new SelectionPrompt<Worker>()
+        WorkerResponse worker = AnsiConsole.Prompt(new SelectionPrompt<WorkerResponse>()
             .Title("Select a Worker")
             .PageSize(10)
             .MoreChoicesText("[grey](Use the up and down arrow keys to reveal more workers[/]")

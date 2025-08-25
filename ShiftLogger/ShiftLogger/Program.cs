@@ -1,6 +1,9 @@
 ﻿using ShiftLogger.Controllers;
-using ShiftLogger.Models;
 using ShiftLogger.Services;
+using ShiftLogger.Contracts.Responses.Workers;
+using ShiftLogger.Contracts.Responses.Shifts;
+using ShiftLogger.Contracts.Requests.Workers;
+using ShiftLogger.Contracts.Requests.Shifts;
 
 namespace ShiftLogger;
 public class Program()
@@ -24,9 +27,9 @@ public class Program()
 
     public static void TestGetAllWorkers()
     {
-        List<Worker> allWorkers = ShiftLoggerAPIService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = ShiftLoggerAPIService.GetAllWorkers();
 
-        foreach (Worker worker in allWorkers)
+        foreach (WorkerResponse worker in allWorkers)
         {
             Console.WriteLine(worker.Name);
         }
@@ -34,20 +37,20 @@ public class Program()
 
     public static void TestPostWorker()
     {
-        Worker worker = new Worker() { Name = "Test" };
+        CreateWorkerRequest worker = new CreateWorkerRequest() { Name = "Test" };
         bool result = ShiftLoggerAPIService.CreateWorker(worker);
 
         Console.WriteLine(result);
     }
 
-    internal static void DisplayAllWorkers(List<Worker> workers)
+    internal static void DisplayAllWorkers(List<WorkerResponse> workers)
     {
-        foreach (Worker worker in workers)
+        foreach (WorkerResponse worker in workers)
         {
             Console.WriteLine(worker.Name);
             if (worker.Shifts != null)
             {
-                foreach (Shift shift in worker.Shifts)
+                foreach (ShiftResponse shift in worker.Shifts)
                 {
                     Console.WriteLine("\tNew Shift");
                     Console.WriteLine($"\tStart Time: {shift.StartTime.ToString("MM-dd-yyyy hh:mm tt")}");

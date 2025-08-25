@@ -1,6 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
-using ShiftLogger.Models;
+using ShiftLogger.Contracts.Responses.Shifts;
+using ShiftLogger.Contracts.Responses.Workers;
+using ShiftLogger.Contracts.Requests.Shifts;
+using ShiftLogger.Contracts.Requests.Workers;
 
 namespace ShiftLogger.Services;
 internal static class ShiftLoggerAPIService
@@ -9,7 +12,7 @@ internal static class ShiftLoggerAPIService
 
     #region Worker Methods
 
-    internal static bool CreateWorker(Worker worker)
+    internal static bool CreateWorker(CreateWorkerRequest worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -29,7 +32,7 @@ internal static class ShiftLoggerAPIService
         return false;
     }
 
-    internal static List<Worker> GetAllWorkers()
+    internal static List<WorkerResponse> GetAllWorkers()
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -39,16 +42,16 @@ internal static class ShiftLoggerAPIService
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
             string rawResponse = response.Result.Content;
-            List<Worker>? workers = JsonConvert.DeserializeObject<List<Worker>>(rawResponse);
+            List<WorkerResponse>? workers = JsonConvert.DeserializeObject<List<WorkerResponse>>(rawResponse);
 
-            if (workers == null) workers = new List<Worker>();
+            if (workers == null) workers = new List<WorkerResponse>();
 
             return workers;
         }
-        else return new List<Worker>();
+        else return new List<WorkerResponse>();
     }
 
-    internal static Worker GetWorkerById(int workerId)
+    internal static WorkerResponse GetWorkerById(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -57,37 +60,37 @@ internal static class ShiftLoggerAPIService
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
             string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return new Worker();
-            Worker? worker = JsonConvert.DeserializeObject<Worker>(rawResponse);
+            if (string.IsNullOrEmpty(rawResponse)) return new WorkerResponse();
+            WorkerResponse? worker = JsonConvert.DeserializeObject<WorkerResponse>(rawResponse);
 
-            if (worker == null) return new Worker();
+            if (worker == null) return new WorkerResponse();
 
             return worker;
         }
-        else return new Worker();
+        else return new WorkerResponse();
     }
 
     #endregion Worker Methods
 
     #region Shift Methods
 
-    internal static List<Shift> GetAllShiftsForWorker(Worker worker)
+    internal static List<ShiftResponse> GetAllShiftsForWorker(WorkerResponse worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
-        RestRequest request = new RestRequest($"Shift/{worker.Username}");
+        RestRequest request = new RestRequest($"Shift/{worker.Id}");
         var response = client.ExecuteAsync(request);
 
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
             string rawResponse = response.Result.Content;
-            List<Shift>? shifts = JsonConvert.DeserializeObject<List<Shift>>(rawResponse);
+            List<ShiftResponse>? shifts = JsonConvert.DeserializeObject<List<ShiftResponse>>(rawResponse);
 
-            if (shifts == null) shifts = new List<Shift>();
+            if (shifts == null) shifts = new List<ShiftResponse>();
 
             return shifts;
         }
-        else return new List<Shift>();
+        else return new List<ShiftResponse>();
     }
 
     #endregion Shift Methods

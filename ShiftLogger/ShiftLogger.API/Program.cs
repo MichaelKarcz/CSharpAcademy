@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ShiftLogger.API.Data;
 using ShiftLogger.API.Interfaces;
 using ShiftLogger.API.Services;
@@ -13,6 +16,11 @@ namespace ShiftLogger.API
 
             builder.Services.AddSwaggerGen(); // swagger
             builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(options => 
+            { 
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); 
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; 
+            });
             builder.Services.AddDbContext<ShiftLoggerDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IShiftService, ShiftService>();
             builder.Services.AddScoped<IWorkerService, WorkerService>();
