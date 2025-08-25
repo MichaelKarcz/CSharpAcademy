@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShiftLogger.API.Contracts.Shifts;
-using ShiftLogger.API.Contracts.Workers;
+using ShiftLogger.API.Models.Shifts;
+using ShiftLogger.API.Models.Workers;
 
 namespace ShiftLogger.API.Data;
 public class ShiftLoggerDbContext : DbContext

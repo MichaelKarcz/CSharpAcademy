@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShiftLogger.API.Contracts.Shifts;
-using ShiftLogger.API.Contracts.Workers;
+using ShiftLogger.API.Models.Shifts;
+using ShiftLogger.API.Models.Workers;
 using ShiftLogger.API.Interfaces;
+using ShiftLogger.Contracts.Requests.Shifts;
+using ShiftLogger.Contracts.Responses.Shifts;
 
 namespace ShiftLogger.API.Controllers;
 
@@ -19,25 +21,25 @@ public class ShiftController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<ShiftDto> CreateShift(CreateShiftDto createShiftDto)
+    public ActionResult<ShiftResponse> CreateShift(CreateShiftRequest createShiftRequest)
     {
         try
         {
-            Worker? worker = _workerService.GetWorkerById(createShiftDto.WorkerId);
+            Worker? worker = _workerService.GetWorkerById(createShiftRequest.WorkerId);
             if (worker == null)
             {
-                return BadRequest(new { error = $"The shift could not be created because a worker could not be found with the provided Id: {createShiftDto.WorkerId}" });
+                return BadRequest(new { error = $"The shift could not be created because a worker could not be found with the provided Id: {createShiftRequest.WorkerId}" });
             }
 
             Shift result = _shiftService.CreateShift(new Shift
             {
-                StartTime = createShiftDto.StartTime,
-                EndTime = createShiftDto.EndTime,
+                StartTime = createShiftRequest.StartTime,
+                EndTime = createShiftRequest.EndTime,
                 WorkerId = worker.Id,
                 Worker = worker
             });
 
-            return Ok(result.ToDto());
+            return Ok(result.ToResponse());
         }
         catch(Exception e)
         {
@@ -48,7 +50,7 @@ public class ShiftController : ControllerBase
     }
 
     [HttpGet("{workerId}")]
-    public ActionResult<List<ShiftDto>> GetAllShiftsForWorker(int workerId)
+    public ActionResult<List<ShiftResponse>> GetAllShiftsForWorker(int workerId)
     {
         try
         {
@@ -57,7 +59,7 @@ public class ShiftController : ControllerBase
             {
                 return NotFound($"There were no shifts found for a worker with Id: {workerId}.");
             }
-            return Ok(results.Select(sh => sh.ToDto()).ToList());
+            return Ok(results.Select(sh => sh.ToResponse()).ToList());
         }
         catch (Exception e)
         {
@@ -68,7 +70,7 @@ public class ShiftController : ControllerBase
     }
 
     [HttpGet("api/[controller]/unfinished/{workerId}")]
-    public ActionResult<ShiftDto> GetUnfinishedShiftForWorker(int workerId)
+    public ActionResult<ShiftResponse> GetUnfinishedShiftForWorker(int workerId)
     {
         try
         {
@@ -77,7 +79,7 @@ public class ShiftController : ControllerBase
             {
                 return NotFound($"There were no unfinished shifts found for a worker with Id: {workerId}.");
             }
-            return Ok(result.ToDto());
+            return Ok(result.ToResponse());
         }
         catch (Exception e)
         {
@@ -88,7 +90,7 @@ public class ShiftController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Shift> UpdateShift(int id, UpdateShiftDto shift)
+    public ActionResult<ShiftResponse> UpdateShift(int id, UpdateShiftRequest shift)
     {
         try
         {
@@ -111,7 +113,7 @@ public class ShiftController : ControllerBase
             {
                 return NotFound($"There were no shifts found to update with Id: {id}.");
             }
-            return Ok(result.ToDto());
+            return Ok(result.ToResponse());
         }
         catch (Exception e)
         {

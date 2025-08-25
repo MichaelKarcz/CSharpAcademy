@@ -1,4 +1,4 @@
-﻿using ShiftLogger.API.Contracts.Workers;
+﻿using ShiftLogger.API.Models.Workers;
 
 namespace ShiftLogger.API.Interfaces;
 public interface IWorkerService

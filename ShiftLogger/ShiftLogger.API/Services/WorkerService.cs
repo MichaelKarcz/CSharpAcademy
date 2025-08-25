@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShiftLogger.API.Contracts.Workers;
 using ShiftLogger.API.Data;
 using ShiftLogger.API.Interfaces;
+using ShiftLogger.API.Models.Workers;
 
 namespace ShiftLogger.API.Services;
 

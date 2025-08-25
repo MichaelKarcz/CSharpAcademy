@@ -1,6 +1,6 @@
-﻿using ShiftLogger.API.Contracts.Shifts;
+﻿using ShiftLogger.API.Models.Shifts;
 
-namespace ShiftLogger.API.Contracts.Workers;
+namespace ShiftLogger.API.Models.Workers;
 public class Worker
 {
     public int Id {  get; set; }

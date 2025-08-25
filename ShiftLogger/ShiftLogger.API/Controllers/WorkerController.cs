@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShiftLogger.API.Contracts.Workers;
 using ShiftLogger.API.Interfaces;
+using ShiftLogger.API.Models.Workers;
+using ShiftLogger.Contracts.Requests.Workers;
+using ShiftLogger.Contracts.Responses.Workers;
 
 namespace ShiftLogger.API.Controllers;
 
@@ -16,7 +18,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<WorkerDto> CreateWorker(CreateWorkerDto createWorkerDto)
+    public ActionResult<WorkerResponse> CreateWorker(CreateWorkerRequest createWorkerDto)
     {
         try
         {
@@ -26,7 +28,7 @@ public class WorkerController : ControllerBase
             {
                 return NotFound($"There was an error creating worker \"{createWorkerDto.Name}\".");
             }
-            return Ok(createdWorker.ToDto());
+            return Ok(createdWorker.ToResponse());
         }
         catch (Exception e)
         {
@@ -37,7 +39,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<WorkerDto>> GetAllWorkers()
+    public ActionResult<List<WorkerResponse>> GetAllWorkers()
     {
         try
         {
@@ -48,7 +50,7 @@ public class WorkerController : ControllerBase
                 return NotFound("There were no workers to retrieve.");
             }
 
-            List<WorkerDto> dtoList = result.Select(w => w.ToDto()).ToList();
+            List<WorkerResponse> dtoList = result.Select(w => w.ToResponse()).ToList();
 
             return Ok(dtoList);
         }
@@ -61,7 +63,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<WorkerDto> GetWorkerById(int id)
+    public ActionResult<WorkerResponse> GetWorkerById(int id)
     {
         try
         {
@@ -70,7 +72,7 @@ public class WorkerController : ControllerBase
             {
                 return NotFound($"There were no workers found with id: {id}.");
             }
-            return Ok(result.ToDto());
+            return Ok(result.ToResponse());
         }
         catch (Exception e)
         {
@@ -81,7 +83,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<WorkerDto> UpdateWorker(int id, UpdateWorkerDto updateWorkerDto)
+    public ActionResult<WorkerResponse> UpdateWorker(int id, UpdateWorkerRequest updateWorkerDto)
     {
         try
         {
@@ -90,7 +92,7 @@ public class WorkerController : ControllerBase
             {
                 return NotFound($"There were no workers found to update with Id: {id}.");
             }
-            return Ok(result.ToDto());
+            return Ok(result.ToResponse());
         }
         catch (Exception e)
         {

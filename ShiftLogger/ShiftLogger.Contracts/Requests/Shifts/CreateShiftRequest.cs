@@ -1,6 +1,6 @@
-﻿namespace ShiftLogger.API.Contracts.Shifts
+﻿namespace ShiftLogger.Contracts.Requests.Shifts
 {
-    public class CreateShiftDto
+    public class CreateShiftRequest
     {
         public DateTime StartTime { get; set; } = DateTime.Now;
         public DateTime? EndTime { get; set; }

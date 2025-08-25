@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using ShiftLogger.API.Contracts.Workers;
+using ShiftLogger.API.Models.Workers;
 
-namespace ShiftLogger.API.Contracts.Shifts;
+namespace ShiftLogger.API.Models.Shifts;
 
 public class Shift
 {
