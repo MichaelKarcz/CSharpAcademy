@@ -5,7 +5,7 @@ using ShiftLogger.Contracts.Responses.Workers;
 using ShiftLogger.Contracts.Requests.Shifts;
 using ShiftLogger.Contracts.Requests.Workers;
 
-namespace ShiftLogger.Services;
+namespace ShiftLogger.Console.Services;
 internal static class ShiftLoggerAPIService
 {
     private static readonly string serviceAddress = "https://localhost:7099/api/";

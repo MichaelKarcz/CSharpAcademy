@@ -1,11 +1,11 @@
-﻿using ShiftLogger.Contracts.Responses.Shifts;
+﻿using ShiftLogger.Console.Services;
+using ShiftLogger.Contracts.Responses.Shifts;
 using ShiftLogger.Contracts.Responses.Workers;
-using ShiftLogger.Services;
 using Spectre.Console;
 
-namespace ShiftLogger.Controllers;
+namespace ShiftLogger.Console.Controllers;
 
-internal static class MenuController
+internal static class MainMenuController
 {
     internal static void RunMainMenuLoop()
     {
@@ -19,10 +19,11 @@ internal static class MenuController
                 {
                     "1. Login",
                     "2. View Workers",
+                    "3. Edit Workers",
                     "0. [grey]Exit the application[/]"
                 }));
 
-            int menuChoiceNumber = Int32.Parse(menuChoice.Substring(0, 1));
+            int menuChoiceNumber = int.Parse(menuChoice.Substring(0, 1));
 
             switch(menuChoiceNumber)
             {
@@ -41,57 +42,7 @@ internal static class MenuController
         }
     }
 
-    internal static void RunMainLoggedInMenu()
-    {
-        AnsiConsole.Clear();
-        WorkerResponse loggedInWorker = LoginPrompt();
-
-        if (loggedInWorker == null || string.IsNullOrEmpty(loggedInWorker.Name))
-        {
-            return;
-        }
-
-        AnsiConsole.Clear();
-        bool logout = false;
-        while (!logout)
-        {
-            string menuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title($"~Welcome, {loggedInWorker.Name}~")
-                .PageSize(7)
-                .AddChoices(new[]
-                {
-                    "1. Start Shift",
-                    "2. End Shift",
-                    "3. View All Shifts",
-                    "4. Modify Shift",
-                    "5. Delete Shift",
-                    "0. [grey]Logout and return to the main menu[/]"
-                }));
-
-            int menuChoiceNumber = Int32.Parse(menuChoice.Substring(0, 1));
-
-            switch (menuChoiceNumber)
-            {
-                case 0:
-                    logout = true;
-                    loggedInWorker = null;
-                    break;
-                case 1:
-
-                    break;
-                case 2:
-
-                    break;
-                case 3:
-
-                    break;
-                case 4:
-
-                    break;
-            }
-        }
-    }
-
+    
     #region MainMenu Methods
 
     internal static void ViewAllWorkers()
@@ -120,22 +71,7 @@ internal static class MenuController
 
     }
 
-    internal static WorkerResponse LoginPrompt()
-    {
-        int workerId = AnsiConsole.Prompt<int>(new TextPrompt<int>("\nEnter your worker Id: ")
-            .ValidationErrorMessage("Please enter an Id. Your input should be a number."));
-        WorkerResponse worker = ShiftLoggerAPIService.GetWorkerById(workerId);
-
-        while (string.IsNullOrEmpty(worker.Name) && workerId != 0)
-        {
-            workerId = AnsiConsole.Prompt<int>(new TextPrompt<int>("\n\nNo workers were found with that Id. Please enter a valid Id or enter 0 to return to the previous menu: "));
-            worker = ShiftLoggerAPIService.GetWorkerById(workerId);
-        }
-
-        AnsiConsole.Clear();
-        return worker ?? new WorkerResponse();
-    }
-
+    
     internal static WorkerResponse SelectWorker(List<WorkerResponse> workers)
     {
         if (workers == null || workers.Count == 0)
@@ -154,10 +90,4 @@ internal static class MenuController
     }
 
     #endregion MainMenu Methods
-
-    #region LoggedInMenu Methods
-
-
-
-    #endregion
 }

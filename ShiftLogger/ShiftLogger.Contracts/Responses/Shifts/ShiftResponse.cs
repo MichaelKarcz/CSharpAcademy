@@ -1,9 +1,8 @@
-﻿namespace ShiftLogger.Contracts.Responses.Shifts
+﻿namespace ShiftLogger.Contracts.Responses.Shifts;
+
+public class ShiftResponse
 {
-    public class ShiftResponse
-    {
-        public int Id { get; set; }
-        public DateTime StartTime { get; set; } = DateTime.Now;
-        public DateTime? EndTime { get; set; }
-    }
+    public int Id { get; set; }
+    public DateTime StartTime { get; set; } = DateTime.Now;
+    public DateTime? EndTime { get; set; }
 }

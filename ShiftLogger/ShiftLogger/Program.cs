@@ -1,18 +1,19 @@
-﻿using ShiftLogger.Controllers;
-using ShiftLogger.Services;
-using ShiftLogger.Contracts.Responses.Workers;
+﻿using ShiftLogger.Contracts.Responses.Workers;
 using ShiftLogger.Contracts.Responses.Shifts;
 using ShiftLogger.Contracts.Requests.Workers;
 using ShiftLogger.Contracts.Requests.Shifts;
+using ShiftLogger.Console.Services;
+using ShiftLogger.Console.Controllers;
+using Spectre.Console;
 
-namespace ShiftLogger;
+namespace ShiftLogger.Console;
 public class Program()
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine("Starting App...\n\n");
+        AnsiConsole.WriteLine("Starting App...\n\n");
 
-        MenuController.RunMainMenuLoop();
+        MainMenuController.RunMainMenuLoop();
         
         //TestPostWorker();
 
@@ -20,7 +21,7 @@ public class Program()
         //List<Worker> workers = ShiftLoggerAPIService.GetAllWorkers();
         //DisplayAllWorkers(workers);
 
-        Console.WriteLine("\n\nEnd of app...");
+        AnsiConsole.WriteLine("\n\nEnd of app...");
     }
 
 
@@ -31,7 +32,7 @@ public class Program()
 
         foreach (WorkerResponse worker in allWorkers)
         {
-            Console.WriteLine(worker.Name);
+            AnsiConsole.WriteLine(worker.Name);
         }
     }
 
@@ -40,21 +41,21 @@ public class Program()
         CreateWorkerRequest worker = new CreateWorkerRequest() { Name = "Test" };
         bool result = ShiftLoggerAPIService.CreateWorker(worker);
 
-        Console.WriteLine(result);
+        AnsiConsole.WriteLine(result);
     }
 
     internal static void DisplayAllWorkers(List<WorkerResponse> workers)
     {
         foreach (WorkerResponse worker in workers)
         {
-            Console.WriteLine(worker.Name);
+            AnsiConsole.WriteLine(worker.Name);
             if (worker.Shifts != null)
             {
                 foreach (ShiftResponse shift in worker.Shifts)
                 {
-                    Console.WriteLine("\tNew Shift");
-                    Console.WriteLine($"\tStart Time: {shift.StartTime.ToString("MM-dd-yyyy hh:mm tt")}");
-                    if (shift.EndTime != null) Console.WriteLine($"\tEnd Time: {shift.EndTime.Value.ToString("MM-dd-yyyy hh:mm tt")}");
+                    AnsiConsole.WriteLine("\tNew Shift");
+                    AnsiConsole.WriteLine($"\tStart Time: {shift.StartTime.ToString("MM-dd-yyyy hh:mm tt")}");
+                    if (shift.EndTime != null) AnsiConsole.WriteLine($"\tEnd Time: {shift.EndTime.Value.ToString("MM-dd-yyyy hh:mm tt")}");
                 }
             }
         }

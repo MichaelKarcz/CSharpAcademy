@@ -1,7 +1,6 @@
-﻿namespace ShiftLogger.Contracts.Requests.Workers
+﻿namespace ShiftLogger.Contracts.Requests.Workers;
+
+public class CreateWorkerRequest
 {
-    public class CreateWorkerRequest
-    {
-        public string Name { get; set; } = string.Empty;
-    }
+    public string Name { get; set; } = string.Empty;
 }
