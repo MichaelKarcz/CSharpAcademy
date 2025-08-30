@@ -1,6 +1,7 @@
 ﻿using ShiftLogger.Console.Helpers;
 using ShiftLogger.Console.Services;
 using ShiftLogger.Contracts.Requests.Workers;
+using ShiftLogger.Contracts.Responses.Workers;
 using Spectre.Console;
 
 namespace ShiftLogger.Console.Controllers;
@@ -13,7 +14,7 @@ internal class EditWorkersMenuController
         while (!navigatePrevious)
         {
             string menuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("~Shift Logger~")
+                .Title("~Shift Logger - Edit Workers~")
                 .PageSize(7)
                 .AddChoices(new[]
                 {
@@ -26,6 +27,7 @@ internal class EditWorkersMenuController
 
             int menuChoiceNumber = int.Parse(menuChoice.Substring(0, 1));
 
+            AnsiConsole.Clear();
             switch (menuChoiceNumber)
             {
                 case 0:
@@ -63,7 +65,7 @@ internal class EditWorkersMenuController
         CreateWorkerRequest newWorker = new CreateWorkerRequest() { Name = workerName };
         try
         {
-            bool addWorkerSuccessful = ShiftLoggerAPIService.CreateWorker(newWorker);
+            bool addWorkerSuccessful = ShiftLoggerApiService.CreateWorker(newWorker);
 
             if (addWorkerSuccessful)
             {
@@ -84,12 +86,55 @@ internal class EditWorkersMenuController
     private static void ModifyExistingWorker()
     {
         AnsiConsole.Clear();
-        throw new NotImplementedException();
+        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
+
+        WorkerResponse? workerToModify = InputHelper.SelectAWorker(allWorkers);
+        if (workerToModify == null)
+        {
+            return;
+        }
+
+        string newName = AnsiConsole.Prompt(new TextPrompt<string>("Note that the existing shifts associated with this worker " +
+            "will still be associated with the new name.\nEnter the new name for this worker: "));
+        if (string.IsNullOrEmpty(newName))
+        {
+            AnsiConsole.WriteLine("No updates were made to this worker. Press any key to return to the previous menu.");
+            AnsiConsole.Console.Input.ReadKey(false);
+            return;
+        }
+
+        UpdateWorkerRequest updateWorkerRequest = new UpdateWorkerRequest() { Id = workerToModify.Id, Name = newName };
+        WorkerResponse? updatedWorker;
+
+        try
+        {
+            updatedWorker = ShiftLoggerApiService.UpdateWorker(updateWorkerRequest.Id, updateWorkerRequest);
+        }
+        catch(Exception ex)
+        {
+            AnsiConsole.WriteLine($"There was an unexpected error attempting to update this worker. More information: {ex.Message}");
+        }
+
     }
 
     private static void DeleteExistingWorker()
     {
-        throw new NotImplementedException();
+        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
+        WorkerResponse? workerToDelete = InputHelper.SelectAWorker(allWorkers);
+        if (workerToDelete == null)
+        {
+            return;
+        }
+
+        bool deleteResponse;
+        try
+        {
+            deleteResponse = ShiftLoggerApiService.DeleteWorker(workerToDelete.Id);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.WriteLine($"There was an unexpected error attempting to delete this worker. More information: {ex.Message}");
+        }
     }
 
 }

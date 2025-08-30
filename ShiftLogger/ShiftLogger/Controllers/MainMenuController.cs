@@ -14,7 +14,7 @@ internal static class MainMenuController
         while (!exitApplication)
         {
             string menuChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("~Shift Logger~")
+                .Title("~Shift Logger - Main Menu~")
                 .PageSize(7)
                 .AddChoices(new[]
                 {
@@ -26,6 +26,7 @@ internal static class MainMenuController
 
             int menuChoiceNumber = int.Parse(menuChoice.Substring(0, 1));
 
+            AnsiConsole.Clear();
             switch(menuChoiceNumber)
             {
                 case 0:

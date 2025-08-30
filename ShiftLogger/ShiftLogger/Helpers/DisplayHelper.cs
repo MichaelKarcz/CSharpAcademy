@@ -8,7 +8,7 @@ internal static class DisplayHelper
 {
     internal static void ViewAllWorkers()
     {
-        List<WorkerResponse> allWorkers = ShiftLoggerAPIService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
         ViewWorkers(allWorkers);
     }
 

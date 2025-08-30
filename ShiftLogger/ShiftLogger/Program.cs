@@ -13,22 +13,24 @@ public class Program()
     {
         AnsiConsole.WriteLine("Starting App...\n\n");
 
+        AnsiConsole.Clear();
         MainMenuController.RunMainMenuLoop();
-        
+
         //TestPostWorker();
 
         //TestGetAllWorkers();
-        //List<Worker> workers = ShiftLoggerAPIService.GetAllWorkers();
+        //List<Worker> workers = ShiftLoggerApiService.GetAllWorkers();
         //DisplayAllWorkers(workers);
 
-        AnsiConsole.WriteLine("\n\nEnd of app...");
+
+            AnsiConsole.WriteLine("\n\nEnd of app...");
     }
 
 
 
     public static void TestGetAllWorkers()
     {
-        List<WorkerResponse> allWorkers = ShiftLoggerAPIService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
 
         foreach (WorkerResponse worker in allWorkers)
         {
@@ -39,14 +41,31 @@ public class Program()
     public static void TestPostWorker()
     {
         CreateWorkerRequest worker = new CreateWorkerRequest() { Name = "Test" };
-        bool result = ShiftLoggerAPIService.CreateWorker(worker);
+        bool result = ShiftLoggerApiService.CreateWorker(worker);
 
         AnsiConsole.WriteLine(result);
     }
 
-    internal static void DisplayAllWorkers(List<WorkerResponse> workers)
+    public static void TestUpdateWorker()
     {
-        foreach (WorkerResponse worker in workers)
+        WorkerResponse preUpdate = ShiftLoggerApiService.GetWorkerById(2);
+        AnsiConsole.WriteLine($"Pre-update: Id = {preUpdate.Id}, Name = {preUpdate.Name}");
+
+        UpdateWorkerRequest newReq = new UpdateWorkerRequest() { Id = 2, Name = "Josh" };
+        AnsiConsole.WriteLine($"Testing update worker Id = {newReq.Id}, Name = {newReq.Name}");
+        WorkerResponse postUpdate = ShiftLoggerApiService.UpdateWorker(newReq.Id, newReq);
+        if (postUpdate != null)
+        {
+            AnsiConsole.WriteLine($"Post-update: Id = {postUpdate.Id}, Name = {postUpdate.Name}");
+            WorkerResponse postUpdateGet = ShiftLoggerApiService.GetWorkerById(2);
+            AnsiConsole.WriteLine($"Post-update Get: Id = {postUpdateGet.Id}, Name = {postUpdateGet.Name}");
+        }
+        else AnsiConsole.WriteLine("Null returned from ShiftLoggerApiService.UpdateWorker");
+    }
+
+    internal static void DisplayAllWorkers(List<WorkerWithShiftsResponse> workers)
+    {
+        foreach (WorkerWithShiftsResponse worker in workers)
         {
             AnsiConsole.WriteLine(worker.Name);
             if (worker.Shifts != null)

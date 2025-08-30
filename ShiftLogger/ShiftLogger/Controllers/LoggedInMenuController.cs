@@ -9,7 +9,7 @@ internal class LoggedInMenuController
     internal static void RunMainLoggedInMenu()
     {
         AnsiConsole.Clear();
-        WorkerResponse loggedInWorker = LoginPrompt();
+        WorkerResponse? loggedInWorker = LoginPrompt();
 
         if (loggedInWorker == null)
         {
@@ -35,6 +35,7 @@ internal class LoggedInMenuController
 
             int menuChoiceNumber = int.Parse(menuChoice.Substring(0, 1));
 
+            AnsiConsole.Clear();
             switch (menuChoiceNumber)
             {
                 case 0:
@@ -57,19 +58,19 @@ internal class LoggedInMenuController
         }
     }
 
-    internal static WorkerResponse LoginPrompt()
+    internal static WorkerResponse? LoginPrompt()
     {
         int workerId = AnsiConsole.Prompt(new TextPrompt<int>("\nEnter your worker Id: ")
             .ValidationErrorMessage("Please enter an Id. Your input should be a number."));
-        WorkerResponse worker = ShiftLoggerAPIService.GetWorkerById(workerId);
+        WorkerResponse? worker = ShiftLoggerApiService.GetWorkerById(workerId);
 
-        while (string.IsNullOrEmpty(worker.Name) && workerId != 0)
+        while ((worker == null || string.IsNullOrEmpty(worker.Name)) && workerId != 0)
         {
             workerId = AnsiConsole.Prompt(new TextPrompt<int>("\n\nNo workers were found with that Id. Please enter a valid Id or enter 0 to return to the previous menu: "));
-            worker = ShiftLoggerAPIService.GetWorkerById(workerId);
+            worker = ShiftLoggerApiService.GetWorkerById(workerId);
         }
 
         AnsiConsole.Clear();
-        return worker ?? new WorkerResponse();
+        return worker;
     }
 }

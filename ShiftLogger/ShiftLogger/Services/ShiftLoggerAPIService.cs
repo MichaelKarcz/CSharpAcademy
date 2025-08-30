@@ -4,9 +4,10 @@ using ShiftLogger.Contracts.Responses.Shifts;
 using ShiftLogger.Contracts.Responses.Workers;
 using ShiftLogger.Contracts.Requests.Shifts;
 using ShiftLogger.Contracts.Requests.Workers;
+using Spectre.Console;
 
 namespace ShiftLogger.Console.Services;
-internal static class ShiftLoggerAPIService
+internal static class ShiftLoggerApiService
 {
     private static readonly string serviceAddress = "https://localhost:7099/api/";
 
@@ -51,7 +52,7 @@ internal static class ShiftLoggerAPIService
         else return new List<WorkerResponse>();
     }
 
-    internal static WorkerResponse GetWorkerById(int workerId)
+    internal static WorkerResponse? GetWorkerById(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -63,11 +64,49 @@ internal static class ShiftLoggerAPIService
             if (string.IsNullOrEmpty(rawResponse)) return new WorkerResponse();
             WorkerResponse? worker = JsonConvert.DeserializeObject<WorkerResponse>(rawResponse);
 
-            if (worker == null) return new WorkerResponse();
+            return worker;
+        }
+        else return null;
+    }
+
+    internal static WorkerResponse? UpdateWorker(int workerId, UpdateWorkerRequest updateWorkerRequest)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Worker/{workerId}", Method.Put);
+        request.AddJsonBody(JsonConvert.SerializeObject(updateWorkerRequest));
+        var response = client.ExecutePutAsync(request);
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string? rawResponse = response.Result.Content;
+            if (string.IsNullOrEmpty(rawResponse)) return null;
+            WorkerResponse? worker = JsonConvert.DeserializeObject<WorkerResponse>(rawResponse);
 
             return worker;
         }
-        else return new WorkerResponse();
+        if (response.Result.StatusCode != System.Net.HttpStatusCode.OK)
+        {
+            AnsiConsole.WriteLine($"Status Code: {response.Result.StatusCode}");
+            AnsiConsole.WriteLine($"Error Content: {response.Result.Content}");
+            AnsiConsole.WriteLine($"Request URL: {client.Options.BaseUrl}/Worker/{workerId}");
+            return null;
+        }
+        else return null;
+    }
+
+    internal static bool DeleteWorker(int workerId)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Worker/{workerId}", Method.Delete);
+        var response = client.ExecuteDeleteAsync(request);
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string? rawResponse = response.Result.Content;
+            if (string.IsNullOrEmpty(rawResponse)) return false;
+        }
+
+        return true;
     }
 
     #endregion Worker Methods
