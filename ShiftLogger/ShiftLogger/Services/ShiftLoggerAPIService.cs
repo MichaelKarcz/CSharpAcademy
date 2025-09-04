@@ -84,13 +84,6 @@ internal static class ShiftLoggerApiService
 
             return worker;
         }
-        if (response.Result.StatusCode != System.Net.HttpStatusCode.OK)
-        {
-            AnsiConsole.WriteLine($"Status Code: {response.Result.StatusCode}");
-            AnsiConsole.WriteLine($"Error Content: {response.Result.Content}");
-            AnsiConsole.WriteLine($"Request URL: {client.Options.BaseUrl}/Worker/{workerId}");
-            return null;
-        }
         else return null;
     }
 
@@ -113,6 +106,26 @@ internal static class ShiftLoggerApiService
 
     #region Shift Methods
 
+    internal static bool CreateShift(CreateShiftRequest shift)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest("Shift");
+        request.AddJsonBody(JsonConvert.SerializeObject(shift));
+        var response = client.ExecutePostAsync(request);
+
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            return true;
+        }
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            return false;
+        }
+
+        return false;
+    }
+
     internal static List<ShiftResponse> GetAllShiftsForWorker(WorkerResponse worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
@@ -130,6 +143,24 @@ internal static class ShiftLoggerApiService
             return shifts;
         }
         else return new List<ShiftResponse>();
+    }
+
+    internal static ShiftResponse? UpdateShift(int shiftId, UpdateShiftRequest updateShiftRequest)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Shift/{shiftId}", Method.Put);
+        request.AddJsonBody(JsonConvert.SerializeObject(updateShiftRequest));
+        var response = client.ExecutePutAsync(request);
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string? rawResponse = response.Result.Content;
+            if (string.IsNullOrEmpty(rawResponse)) return null;
+            ShiftResponse? shift = JsonConvert.DeserializeObject<ShiftResponse>(rawResponse);
+
+            return shift;
+        }
+        else return null;
     }
 
     #endregion Shift Methods

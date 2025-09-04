@@ -57,7 +57,7 @@ internal class EditWorkersMenuController
         string workerName = AnsiConsole.Prompt(new TextPrompt<string>("Enter the name of the new worker: "));
         if (string.IsNullOrEmpty(workerName))
         {
-            AnsiConsole.WriteLine("No worker was added. Press any key to return to the previous menu.");
+            AnsiConsole.WriteLine("No worker was added. Press any key to return to the previous menu.\n");
             AnsiConsole.Console.Input.ReadKey(false);
             return;
         }
@@ -69,11 +69,11 @@ internal class EditWorkersMenuController
 
             if (addWorkerSuccessful)
             {
-                AnsiConsole.WriteLine($"{workerName} was added as a new worker successfully!");
+                AnsiConsole.WriteLine($"{workerName} was added as a new worker successfully!\n");
             }
             else
             {
-                AnsiConsole.WriteLine($"There was an issue adding {workerName} as a new worker.");
+                AnsiConsole.WriteLine($"There was an issue adding {workerName} as a new worker.\n");
             }
 
         }
@@ -98,7 +98,7 @@ internal class EditWorkersMenuController
             "will still be associated with the new name.\nEnter the new name for this worker: "));
         if (string.IsNullOrEmpty(newName))
         {
-            AnsiConsole.WriteLine("No updates were made to this worker. Press any key to return to the previous menu.");
+            AnsiConsole.WriteLine("No updates were made to this worker. Press any key to return to the previous menu.\n");
             AnsiConsole.Console.Input.ReadKey(false);
             return;
         }
@@ -112,7 +112,7 @@ internal class EditWorkersMenuController
         }
         catch(Exception ex)
         {
-            AnsiConsole.WriteLine($"There was an unexpected error attempting to update this worker. More information: {ex.Message}");
+            AnsiConsole.WriteLine($"There was an unexpected error attempting to update this worker. More information: {ex.Message}\n");
         }
 
     }
@@ -126,14 +126,18 @@ internal class EditWorkersMenuController
             return;
         }
 
-        bool deleteResponse;
         try
         {
-            deleteResponse = ShiftLoggerApiService.DeleteWorker(workerToDelete.Id);
+            if (ShiftLoggerApiService.DeleteWorker(workerToDelete.Id))
+            {
+                AnsiConsole.WriteLine($"The worker with Id = {workerToDelete.Id}, {workerToDelete.Name}, was deleted successfully!\n");
+            }
+            else AnsiConsole.WriteLine($"There was an error deleting {workerToDelete.Name}.\n");
+
         }
         catch (Exception ex)
         {
-            AnsiConsole.WriteLine($"There was an unexpected error attempting to delete this worker. More information: {ex.Message}");
+            AnsiConsole.WriteLine($"There was an unexpected error attempting to delete this worker. More information: {ex.Message}\n");
         }
     }
 

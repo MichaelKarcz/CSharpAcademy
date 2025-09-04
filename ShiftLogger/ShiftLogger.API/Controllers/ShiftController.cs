@@ -28,7 +28,7 @@ public class ShiftController : ControllerBase
             Worker? worker = _workerService.GetWorkerById(createShiftRequest.WorkerId);
             if (worker == null)
             {
-                return BadRequest(new { error = $"The shift could not be created because a worker could not be found with the provided Id: {createShiftRequest.WorkerId}" });
+                return BadRequest(new { error = $"The shift could not be created because a worker could not be found with the provided Id: {createShiftRequest.WorkerId}\n" });
             }
 
             Shift result = _shiftService.CreateShift(new Shift
@@ -57,7 +57,7 @@ public class ShiftController : ControllerBase
             List<Shift> results = _shiftService.GetAllShiftsForWorker(workerId);
             if (results == null || results.Count < 1)
             {
-                return NotFound($"There were no shifts found for a worker with Id: {workerId}.");
+                return NotFound($"There were no shifts found for a worker with Id: {workerId}.\n");
             }
             return Ok(results.Select(sh => sh.ToResponse()).ToList());
         }
@@ -77,7 +77,7 @@ public class ShiftController : ControllerBase
             Shift? result = _shiftService.GetUnfinishedShiftForWorker(workerId);
             if (result == null)
             {
-                return NotFound($"There were no unfinished shifts found for a worker with Id: {workerId}.");
+                return NotFound($"There were no unfinished shifts found for a worker with Id: {workerId}.\n");
             }
             return Ok(result.ToResponse());
         }
@@ -97,7 +97,7 @@ public class ShiftController : ControllerBase
             Shift? existingShift = _shiftService.GetShiftById(id);
             if (existingShift == null)
             {
-                return NotFound($"There were no shifts found to update with Id: {id}.");
+                return NotFound($"There were no shifts found to update with Id: {id}.\n");
             }
 
             Shift updatedShift = new Shift { 
@@ -111,7 +111,7 @@ public class ShiftController : ControllerBase
             Shift? result = _shiftService.UpdateShift(id, updatedShift);
             if (result == null)
             {
-                return NotFound($"There were no shifts found to update with Id: {id}.");
+                return NotFound($"There were no shifts found to update with Id: {id}.\n");
             }
             return Ok(result.ToResponse());
         }
@@ -132,7 +132,7 @@ public class ShiftController : ControllerBase
 
             if (string.IsNullOrEmpty(result))
             {
-                return NotFound("There were no shifts found to delete with that id.");
+                return NotFound("There were no shifts found to delete with that id.\n");
             }
 
             return Ok(result);

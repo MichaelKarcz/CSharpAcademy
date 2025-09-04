@@ -1,4 +1,5 @@
 ﻿using ShiftLogger.Console.Services;
+using ShiftLogger.Contracts.Requests.Shifts;
 using ShiftLogger.Contracts.Responses.Workers;
 using Spectre.Console;
 
@@ -43,17 +44,21 @@ internal class LoggedInMenuController
                     loggedInWorker = null;
                     break;
                 case 1:
-
+                    StartShift(loggedInWorker);
                     break;
                 case 2:
-
+                    EndShift(loggedInWorker);
                     break;
                 case 3:
-
+                    ViewAllShifts(loggedInWorker);
                     break;
                 case 4:
-
+                    ModifyShift(loggedInWorker);
                     break;
+                case 5:
+                    DeleteShift(loggedInWorker);
+                    break;
+
             }
         }
     }
@@ -72,5 +77,23 @@ internal class LoggedInMenuController
 
         AnsiConsole.Clear();
         return worker;
+    }
+
+    internal static void StartShift(WorkerResponse loggedInWorker)
+    {
+        if (loggedInWorker == null)
+        {
+            AnsiConsole.WriteLine("There is no logged in worker to associate this shift with.\n");
+            return;
+        }
+
+        CreateShiftRequest newShift = new CreateShiftRequest() { WorkerId = loggedInWorker.Id};
+
+        ShiftLoggerApiService.CreateShift(newShift);
+    }
+
+    internal static void EndShift(WorkerResponse loggedInWorker)
+    {
+
     }
 }

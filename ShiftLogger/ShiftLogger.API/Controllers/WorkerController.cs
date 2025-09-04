@@ -26,7 +26,7 @@ public class WorkerController : ControllerBase
 
             if (createdWorker == null)
             {
-                return NotFound($"There was an error creating worker \"{createWorkerDto.Name}\".");
+                return NotFound($"There was an error creating worker \"{createWorkerDto.Name}\".\n");
             }
             return Ok(createdWorker.ToResponse());
         }
@@ -47,7 +47,7 @@ public class WorkerController : ControllerBase
 
             if (result == null || result.Count < 1)
             {
-                return NotFound("There were no workers to retrieve.");
+                return NotFound("There were no workers to retrieve.\n");
             }
 
             List<WorkerResponse> dtoList = result.Select(w => w.ToResponse()).ToList();
@@ -70,7 +70,7 @@ public class WorkerController : ControllerBase
             var result = _workerService.GetWorkerById(id);
             if (result == null)
             {
-                return NotFound($"There were no workers found with id: {id}.");
+                return NotFound($"There were no workers found with id: {id}.\n");
             }
             return Ok(result.ToResponse());
         }
@@ -90,7 +90,7 @@ public class WorkerController : ControllerBase
             var result = _workerService.UpdateWorker(id, new Worker { Id = updateWorkerDto.Id, Name = updateWorkerDto.Name});
             if (result == null)
             {
-                return NotFound($"There were no workers found to update with Id: {id}.");
+                return NotFound($"There were no workers found to update with Id: {id}.\n");
             }
             return Ok(result.ToResponse());
         }
@@ -110,7 +110,7 @@ public class WorkerController : ControllerBase
             var result = _workerService.DeleteWorker(id);
             if (string.IsNullOrEmpty(result))
             {
-                return NotFound("There were no workers found to delete with that id.");
+                return NotFound("There were no workers found to delete with that id.\n");
             }
             return Ok(result);
         }
