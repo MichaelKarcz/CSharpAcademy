@@ -69,7 +69,7 @@ public class ShiftController : ControllerBase
         }
     }
 
-    [HttpGet("api/[controller]/unfinished/{workerId}")]
+    [HttpGet("unfinished/{workerId}")]
     public ActionResult<ShiftResponse> GetUnfinishedShiftForWorker(int workerId)
     {
         try

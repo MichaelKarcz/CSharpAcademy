@@ -7,6 +7,9 @@ namespace ShiftLogger.Console.Helpers;
 
 internal static class DisplayHelper
 {
+    public static string DateFormat = "MM-dd-yyyy hh:mm tt";
+    public static string DateFormatExample = "05-24-2025 05:22 PM";
+
     internal static void ViewAllWorkers()
     {
         List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
@@ -50,7 +53,7 @@ internal static class DisplayHelper
         table.AddColumn(new TableColumn("End Time").Centered().NoWrap());
         foreach (ShiftResponse shift in shifts)
         {
-            table.AddRow(shift.Id.ToString(), shift.StartTime.ToString("MM-dd-yyyy hh:mm tt"), (shift.EndTime.HasValue ? shift.EndTime.Value.ToString("MM-dd-yyyy hh:mm tt") : ""));
+            table.AddRow(shift.Id.ToString(), shift.StartTime.ToString(DateFormat), (shift.EndTime.HasValue ? shift.EndTime.Value.ToString(DateFormat) : ""));
         }
         table.Border(TableBorder.Heavy);
         table.ShowRowSeparators();

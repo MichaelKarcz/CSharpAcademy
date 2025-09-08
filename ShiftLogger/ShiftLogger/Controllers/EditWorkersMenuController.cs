@@ -119,6 +119,7 @@ internal class EditWorkersMenuController
 
     private static void DeleteExistingWorker()
     {
+        AnsiConsole.Clear();
         List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
         WorkerResponse? workerToDelete = InputHelper.SelectAWorker(allWorkers);
         if (workerToDelete == null)

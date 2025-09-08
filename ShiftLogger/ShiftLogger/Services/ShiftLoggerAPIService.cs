@@ -29,7 +29,6 @@ internal static class ShiftLoggerApiService
         {
             return false;
         }
-
         return false;
     }
 
@@ -61,7 +60,7 @@ internal static class ShiftLoggerApiService
         if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
         {
             string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return new WorkerResponse();
+            if (string.IsNullOrEmpty(rawResponse)) return null;
             WorkerResponse? worker = JsonConvert.DeserializeObject<WorkerResponse>(rawResponse);
 
             return worker;
@@ -98,7 +97,6 @@ internal static class ShiftLoggerApiService
             string? rawResponse = response.Result.Content;
             if (string.IsNullOrEmpty(rawResponse)) return false;
         }
-
         return true;
     }
 
@@ -122,7 +120,6 @@ internal static class ShiftLoggerApiService
         {
             return false;
         }
-
         return false;
     }
 
@@ -145,6 +142,22 @@ internal static class ShiftLoggerApiService
         else return new List<ShiftResponse>();
     }
 
+    internal static ShiftResponse? GetUnfinishedShiftForWorker(WorkerResponse worker)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Shift/unfinished/{worker.Id}");
+        var response = client.ExecuteAsync(request);
+
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string rawResponse = response.Result.Content;
+            ShiftResponse? unfinishedShift = JsonConvert.DeserializeObject<ShiftResponse>(rawResponse);
+            return unfinishedShift;
+        }
+        else return null;
+    }
+
     internal static ShiftResponse? UpdateShift(int shiftId, UpdateShiftRequest updateShiftRequest)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
@@ -161,6 +174,20 @@ internal static class ShiftLoggerApiService
             return shift;
         }
         else return null;
+    }
+
+    internal static bool DeleteShift(int shiftId)
+    {
+        RestClientOptions options = new RestClientOptions(serviceAddress);
+        RestClient client = new RestClient(options);
+        RestRequest request = new RestRequest($"Shift/{shiftId}", Method.Delete);
+        var response = client.ExecuteDeleteAsync(request);
+        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string? rawResponse = response.Result.Content;
+            if (string.IsNullOrEmpty(rawResponse)) return false;
+        }
+        return true;
     }
 
     #endregion Shift Methods

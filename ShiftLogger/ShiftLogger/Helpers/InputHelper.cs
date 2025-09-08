@@ -7,10 +7,7 @@ namespace ShiftLogger.Console.Helpers;
 
 internal static class InputHelper
 {
-    private static string _dateFormat = "MM-dd-yyyy hh:mm tt";
-    private static string _dateFormatExample = "05-24-2025 05:22 PM";
-
-    internal static DateTime GetValidDateTimeInput(string prompt)
+    internal static DateTime GetValidStartDate(string prompt)
     {
         DateTime validDateTime = new DateTime();
 
@@ -18,24 +15,44 @@ internal static class InputHelper
         
         while (true)
         {
-            dateString = AnsiConsole.Prompt(new TextPrompt<string>(prompt));
+            dateString = AnsiConsole.Prompt(
+                new TextPrompt<string>(prompt)
+                .Validate<string>(n => ValidateDateTime(n)));
 
-            if (DateTime.TryParseExact(dateString, _dateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out validDateTime))
+            if (DateTime.TryParseExact(dateString, DisplayHelper.DateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out validDateTime))
             {
                 return validDateTime;
             }
-            else AnsiConsole.WriteLine($"Invalid format! Date/time input must be in format {_dateFormat}.");
+        }
+    }
+
+    internal static DateTime GetValidEndDate(string prompt, DateTime startDateTime)
+    {
+        DateTime validDateTime = new DateTime();
+
+        string dateString;
+
+        while (true)
+        {
+            dateString = AnsiConsole.Prompt(
+                new TextPrompt<string>(prompt)
+                .Validate<string>(n => ValidateEndDateTime(n, startDateTime)));
+
+            if (DateTime.TryParseExact(dateString, DisplayHelper.DateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out validDateTime))
+            {
+                return validDateTime;
+            }
         }
     }
 
     internal static ValidationResult ValidateDateTime(string dateTime)
     {
-        if (!DateTime.TryParseExact(dateTime, _dateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out _))
+        if (!DateTime.TryParseExact(dateTime, DisplayHelper.DateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out _))
         {
-            return ValidationResult.Error($"Incorrect time format! Remember to format your entry as {_dateFormat}, so '{_dateFormatExample}' for example.\n");
+            return ValidationResult.Error($"Incorrect time format! Remember to format your entry as {DisplayHelper.DateFormat}, so '{DisplayHelper.DateFormatExample}' for example.\n");
         }
 
-        DateTime timeDT = DateTime.ParseExact(dateTime, _dateFormat, new CultureInfo("en-US"));
+        DateTime timeDT = DateTime.ParseExact(dateTime, DisplayHelper.DateFormat, new CultureInfo("en-US"));
         if (timeDT > DateTime.Now)
         {
             return ValidationResult.Error("You cannot log a future date/time.");
@@ -44,7 +61,7 @@ internal static class InputHelper
         return ValidationResult.Success();
     }
 
-    internal static ValidationResult ValidateEndTime(string endTime, string startTime)
+    internal static ValidationResult ValidateEndDateTime(string endTime, DateTime startTime)
     {
         ValidationResult validateGenericTimeResult = ValidateDateTime(endTime);
 
@@ -53,10 +70,9 @@ internal static class InputHelper
             return validateGenericTimeResult;
         }
 
-        DateTime endTimeDT = DateTime.ParseExact(endTime, _dateFormat, new CultureInfo("en-US"));
-        DateTime startTimeDT = DateTime.ParseExact(startTime, _dateFormat, new CultureInfo("en-US"));
+        DateTime endTimeDT = DateTime.ParseExact(endTime, DisplayHelper.DateFormat, new CultureInfo("en-US"));
 
-        if (endTimeDT < startTimeDT)
+        if (endTimeDT < startTime)
         {
             return ValidationResult.Error("You cannot have an end time earlier than the start time.\n");
         }
