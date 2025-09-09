@@ -26,10 +26,6 @@ public class ShiftService : IShiftService
         var results = _context.Shifts
             .Where(sh => sh.Id == id);
 
-        if (results == null || results.Count() < 1)
-        {
-            return null;
-        }
         return await results.FirstOrDefaultAsync();
     }
 
@@ -48,6 +44,11 @@ public class ShiftService : IShiftService
     public async Task<Shift?> UpdateShiftAsync(int id, Shift updatedShift)
     {
         Shift? savedShift = await _context.Shifts.FindAsync(id);
+
+        if (savedShift == null)
+        {
+            return null;
+        }
 
         _context.Entry(savedShift).CurrentValues.SetValues(updatedShift);
         await _context.SaveChangesAsync();

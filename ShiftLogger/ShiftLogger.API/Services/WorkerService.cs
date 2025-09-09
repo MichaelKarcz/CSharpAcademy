@@ -27,8 +27,6 @@ public class WorkerService : IWorkerService
             .Include(worker => worker.Shifts)
             .ToListAsync();
 
-        if (resultsList.Count == 0) return new List<Worker>();
-
         return resultsList;
     }
 
