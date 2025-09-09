@@ -14,14 +14,14 @@ public class ShiftService : IShiftService
         _context = context;
     }
 
-    public Shift CreateShift(Shift shift)
+    public async Task<Shift> CreateShift(Shift shift)
     {
-        var savedShift = _context.Add(shift);
+        var savedShift = await _context.AddAsync(shift);
         _context.SaveChanges();
         return savedShift.Entity;
     }
 
-    public Shift? GetShiftById(int id)
+    public async Task<Shift?> GetShiftById(int id)
     {
         var results = _context.Shifts
             .Where(sh => sh.Id == id);
@@ -30,34 +30,34 @@ public class ShiftService : IShiftService
         {
             return null;
         }
-        return results.First();
+        return await results.FirstOrDefaultAsync();
     }
 
-    public List<Shift> GetAllShiftsForWorker(int workerId)
+    public async Task<List<Shift>> GetAllShiftsForWorker(int workerId)
     {
-        List<Shift> resultsList = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId).ToList();
+        List<Shift> resultsList = await _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId).ToListAsync();
         return resultsList;
     }
 
-    public Shift? GetUnfinishedShiftForWorker(int workerId)
+    public async Task<Shift?> GetUnfinishedShiftForWorker(int workerId)
     {
         var results = _context.Shifts.Include(sh => sh.Worker).Where(sh => sh.WorkerId == workerId && sh.EndTime == null);
-        return results.Count() > 0 ? results.First() : null;
+        return results.Count() > 0 ? await results.FirstOrDefaultAsync() : null;
     }
 
-    public Shift? UpdateShift(int id, Shift updatedShift)
+    public async Task<Shift?> UpdateShift(int id, Shift updatedShift)
     {
-        Shift? savedShift = _context.Shifts.Find(id);
+        Shift? savedShift = await _context.Shifts.FindAsync(id);
 
         _context.Entry(savedShift).CurrentValues.SetValues(updatedShift);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return savedShift;
     }
 
-    public string DeleteShift(int id)
+    public async Task<string> DeleteShift(int id)
     {
-        Shift? savedShift = _context.Shifts.Find(id);
+        Shift? savedShift = await _context.Shifts.FindAsync(id);
 
         if (savedShift == null)
         {
@@ -65,7 +65,7 @@ public class ShiftService : IShiftService
         }
 
         _context.Shifts.Remove(savedShift);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return $"Successfully deleted shift with id: {id}";
 

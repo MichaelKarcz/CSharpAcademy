@@ -14,25 +14,25 @@ public class WorkerService : IWorkerService
         _context = context;
     }
 
-    public Worker CreateWorker(Worker worker)
+    public async Task<Worker> CreateWorker(Worker worker)
     {
         var addedWorker = _context.Workers.Add(worker);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return addedWorker.Entity;
     }
 
-    public List<Worker> GetAllWorkers()
+    public async Task<List<Worker>> GetAllWorkers()
     {
-        List<Worker> resultsList = _context.Workers
+        List<Worker> resultsList = await _context.Workers
             .Include(worker => worker.Shifts)
-            .ToList();
+            .ToListAsync();
 
         if (resultsList.Count == 0) return new List<Worker>();
 
         return resultsList;
     }
 
-    public Worker? GetWorkerById(int id)
+    public async Task<Worker?> GetWorkerById(int id)
     {
         var results = _context.Workers
             .Include(worker => worker.Shifts)
@@ -42,12 +42,12 @@ public class WorkerService : IWorkerService
         {
             return null;
         }
-        return results.First();
+        return await results.FirstOrDefaultAsync();
     }
 
-    public Worker? UpdateWorker(int id, Worker updatedWorker)
+    public async Task<Worker?> UpdateWorker(int id, Worker updatedWorker)
     {
-        Worker? savedWorker = _context.Workers.Find(id);
+        Worker? savedWorker = await _context.Workers.FindAsync(id);
 
         if (savedWorker == null)
         {
@@ -55,14 +55,14 @@ public class WorkerService : IWorkerService
         }
 
         _context.Entry(savedWorker).CurrentValues.SetValues(updatedWorker);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return savedWorker;
     }
 
-    public string DeleteWorker(int id)
+    public async Task<string> DeleteWorker(int id)
     {
-        Worker? savedWorker = _context.Workers.Find(id);
+        Worker? savedWorker = await _context.Workers.FindAsync(id);
 
         if (savedWorker == null)
         {
@@ -70,7 +70,7 @@ public class WorkerService : IWorkerService
         }
 
         _context.Remove(savedWorker);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return $"Successfully deleted worker with id: {id}";
     }
