@@ -18,11 +18,11 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<WorkerResponse> CreateWorker(CreateWorkerRequest createWorkerDto)
+    public async Task<ActionResult<WorkerResponse>> CreateWorkerAsync(CreateWorkerRequest createWorkerDto)
     {
         try
         {
-            Worker createdWorker = _workerService.CreateWorker(new Worker { Name = createWorkerDto.Name });
+            Worker createdWorker = await _workerService.CreateWorkerAsync(new Worker { Name = createWorkerDto.Name });
 
             if (createdWorker == null)
             {
@@ -32,18 +32,18 @@ public class WorkerController : ControllerBase
         }
         catch (Exception e)
         {
-            string errorMessage = "There was an error creating the worker. Additional details: ";
+            string errorMessage = "There was an internal server error while creating the worker. Additional details: ";
             errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
-            return BadRequest(errorMessage);
+            return StatusCode(500, new { error = errorMessage });
         }
     }
 
     [HttpGet]
-    public ActionResult<List<WorkerResponse>> GetAllWorkers()
+    public async Task<ActionResult<List<WorkerResponse>>> GetAllWorkersAsync()
     {
         try
         {
-            List<Worker> result = _workerService.GetAllWorkers();
+            List<Worker> result = await _workerService.GetAllWorkersAsync();
 
             if (result == null || result.Count < 1)
             {
@@ -56,18 +56,18 @@ public class WorkerController : ControllerBase
         }
         catch (Exception e)
         {
-            string errorMessage = "There was an error retrieving the workers. Additional details: ";
+            string errorMessage = "There was an internal server error while retrieving the workers. Additional details: ";
             errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
-            return BadRequest(errorMessage);
+            return StatusCode(500, new { error = errorMessage });
         }
     }
 
     [HttpGet("{id}")]
-    public ActionResult<WorkerResponse> GetWorkerById(int id)
+    public async Task<ActionResult<WorkerResponse>> GetWorkerByIdAsync(int id)
     {
         try
         {
-            var result = _workerService.GetWorkerById(id);
+            var result = await _workerService.GetWorkerByIdAsync(id);
             if (result == null)
             {
                 return NotFound($"There were no workers found with id: {id}.\n");
@@ -76,18 +76,18 @@ public class WorkerController : ControllerBase
         }
         catch (Exception e)
         {
-            string errorMessage = "There was an error retrieving the worker. Additional details: ";
+            string errorMessage = "There was an internal server error while retrieving the worker. Additional details: ";
             errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
-            return BadRequest(errorMessage);
+            return StatusCode(500, new { error = errorMessage });
         }
     }
 
     [HttpPut("{id}")]
-    public ActionResult<WorkerResponse> UpdateWorker(int id, UpdateWorkerRequest updateWorkerDto)
+    public async Task<ActionResult<WorkerResponse>> UpdateWorkerAsync(int id, UpdateWorkerRequest updateWorkerDto)
     {
         try
         {
-            var result = _workerService.UpdateWorker(id, new Worker { Id = updateWorkerDto.Id, Name = updateWorkerDto.Name});
+            var result = await _workerService.UpdateWorkerAsync(id, new Worker { Id = updateWorkerDto.Id, Name = updateWorkerDto.Name});
             if (result == null)
             {
                 return NotFound($"There were no workers found to update with Id: {id}.\n");
@@ -96,18 +96,18 @@ public class WorkerController : ControllerBase
         }
         catch (Exception e)
         {
-            string errorMessage = "There was an error updating the worker. Additional details: ";
+            string errorMessage = "There was an internal server error while updating the worker. Additional details: ";
             errorMessage += e.InnerException != null ? e.InnerException.Message : e.Message;
-            return BadRequest(errorMessage);
+            return StatusCode(500, new { error = errorMessage });
         }
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<string> DeleteWorker(int id)
+    public async Task<ActionResult<string>> DeleteWorkerAsync(int id)
     {
         try
         {
-            var result = _workerService.DeleteWorker(id);
+            var result = await _workerService.DeleteWorkerAsync(id);
             if (string.IsNullOrEmpty(result))
             {
                 return NotFound("There were no workers found to delete with that id.\n");

@@ -14,14 +14,14 @@ public class WorkerService : IWorkerService
         _context = context;
     }
 
-    public async Task<Worker> CreateWorker(Worker worker)
+    public async Task<Worker> CreateWorkerAsync(Worker worker)
     {
         var addedWorker = _context.Workers.Add(worker);
         await _context.SaveChangesAsync();
         return addedWorker.Entity;
     }
 
-    public async Task<List<Worker>> GetAllWorkers()
+    public async Task<List<Worker>> GetAllWorkersAsync()
     {
         List<Worker> resultsList = await _context.Workers
             .Include(worker => worker.Shifts)
@@ -32,20 +32,16 @@ public class WorkerService : IWorkerService
         return resultsList;
     }
 
-    public async Task<Worker?> GetWorkerById(int id)
+    public async Task<Worker?> GetWorkerByIdAsync(int id)
     {
         var results = _context.Workers
             .Include(worker => worker.Shifts)
             .Where(w => w.Id == id);
 
-        if (results == null || results.Count() < 1)
-        {
-            return null;
-        }
         return await results.FirstOrDefaultAsync();
     }
 
-    public async Task<Worker?> UpdateWorker(int id, Worker updatedWorker)
+    public async Task<Worker?> UpdateWorkerAsync(int id, Worker updatedWorker)
     {
         Worker? savedWorker = await _context.Workers.FindAsync(id);
 
@@ -60,7 +56,7 @@ public class WorkerService : IWorkerService
         return savedWorker;
     }
 
-    public async Task<string> DeleteWorker(int id)
+    public async Task<string> DeleteWorkerAsync(int id)
     {
         Worker? savedWorker = await _context.Workers.FindAsync(id);
 

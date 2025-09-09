@@ -3,10 +3,10 @@
 namespace ShiftLogger.API.Interfaces;
 public interface IShiftService
 {
-    public Shift CreateShift(Shift shift);
-    public List<Shift> GetAllShiftsForWorker(int workerId);
-    public Shift? GetShiftById(int id);
-    public Shift? GetUnfinishedShiftForWorker(int workerId);
-    public Shift? UpdateShift(int id, Shift updatedShift);
-    public string DeleteShift(int id);
+    public Task<Shift> CreateShiftAsync(Shift shift);
+    public Task<List<Shift>> GetAllShiftsForWorkerAsync(int workerId);
+    public Task<Shift?> GetShiftByIdAsync(int id);
+    public Task<Shift?> GetUnfinishedShiftForWorkerAsync(int workerId);
+    public Task<Shift?> UpdateShiftAsync(int id, Shift updatedShift);
+    public Task<string> DeleteShiftAsync(int id);
 }
