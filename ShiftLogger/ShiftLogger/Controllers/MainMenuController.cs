@@ -8,7 +8,7 @@ namespace ShiftLogger.Console.Controllers;
 
 internal static class MainMenuController
 {
-    internal static void RunMainMenuLoop()
+    internal async static Task RunMainMenuLoop()
     {
         bool exitApplication = false;
         while (!exitApplication)
@@ -33,7 +33,7 @@ internal static class MainMenuController
                     exitApplication = true;
                     break;
                 case 1:
-                    LoggedInMenuController.RunMainLoggedInMenu();
+                    await LoggedInMenuController.RunMainLoggedInMenu();
                     break;
                 case 2:
                     DisplayHelper.ViewAllWorkers();

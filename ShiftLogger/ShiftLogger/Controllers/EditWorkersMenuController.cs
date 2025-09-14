@@ -8,7 +8,7 @@ namespace ShiftLogger.Console.Controllers;
 
 internal class EditWorkersMenuController
 {
-    internal static void RunMainEditWorkersMenu()
+    internal async static void RunMainEditWorkersMenu()
     {
         bool navigatePrevious = false;
         while (!navigatePrevious)
@@ -51,7 +51,7 @@ internal class EditWorkersMenuController
         }
     }
 
-    private static void AddWorker()
+    private async static Task AddWorker()
     {
         AnsiConsole.Clear();
         string workerName = AnsiConsole.Prompt(new TextPrompt<string>("Enter the name of the new worker: "));
@@ -65,7 +65,7 @@ internal class EditWorkersMenuController
         CreateWorkerRequest newWorker = new CreateWorkerRequest() { Name = workerName };
         try
         {
-            bool addWorkerSuccessful = ShiftLoggerApiService.CreateWorker(newWorker);
+            bool addWorkerSuccessful = await ShiftLoggerApiService.CreateWorkerAsync(newWorker);
 
             if (addWorkerSuccessful)
             {
@@ -83,10 +83,10 @@ internal class EditWorkersMenuController
         }
     }
 
-    private static void ModifyExistingWorker()
+    private async static Task ModifyExistingWorker()
     {
         AnsiConsole.Clear();
-        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = await ShiftLoggerApiService.GetAllWorkersAsync();
 
         WorkerResponse? workerToModify = InputHelper.SelectAWorker(allWorkers);
         if (workerToModify == null)
@@ -108,7 +108,7 @@ internal class EditWorkersMenuController
 
         try
         {
-            updatedWorker = ShiftLoggerApiService.UpdateWorker(updateWorkerRequest.Id, updateWorkerRequest);
+            updatedWorker = await ShiftLoggerApiService.UpdateWorkerAsync(updateWorkerRequest.Id, updateWorkerRequest);
         }
         catch(Exception ex)
         {
@@ -117,10 +117,10 @@ internal class EditWorkersMenuController
 
     }
 
-    private static void DeleteExistingWorker()
+    private async static Task DeleteExistingWorker()
     {
         AnsiConsole.Clear();
-        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = await ShiftLoggerApiService.GetAllWorkersAsync();
         WorkerResponse? workerToDelete = InputHelper.SelectAWorker(allWorkers);
         if (workerToDelete == null)
         {
@@ -129,7 +129,7 @@ internal class EditWorkersMenuController
 
         try
         {
-            if (ShiftLoggerApiService.DeleteWorker(workerToDelete.Id))
+            if (await ShiftLoggerApiService.DeleteWorkerAsync(workerToDelete.Id))
             {
                 AnsiConsole.WriteLine($"The worker with Id = {workerToDelete.Id}, {workerToDelete.Name}, was deleted successfully!\n");
             }

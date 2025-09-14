@@ -13,35 +13,31 @@ internal static class ShiftLoggerApiService
 
     #region Worker Methods
 
-    internal static bool CreateWorker(CreateWorkerRequest worker)
+    internal async static Task<bool> CreateWorkerAsync(CreateWorkerRequest worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest("Worker");
         request.AddJsonBody(JsonConvert.SerializeObject(worker));
-        var response = client.ExecutePostAsync(request);
+        var response = await client.ExecutePostAsync(request);
 
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
         {
             return true;
         }
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.BadRequest)
-        {
-            return false;
-        }
-        return false;
+        else return false;
     }
 
-    internal static List<WorkerResponse> GetAllWorkers()
+    internal async static Task<List<WorkerResponse>> GetAllWorkersAsync()
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest("Worker");
-        var response = client.ExecuteAsync(request);
+        var response = await client.ExecuteAsync(request);
 
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string rawResponse = response.Result.Content;
+            string rawResponse = response.Content;
             List<WorkerResponse>? workers = JsonConvert.DeserializeObject<List<WorkerResponse>>(rawResponse);
 
             if (workers == null) workers = new List<WorkerResponse>();
@@ -51,16 +47,15 @@ internal static class ShiftLoggerApiService
         else return new List<WorkerResponse>();
     }
 
-    internal static WorkerResponse? GetWorkerById(int workerId)
+    internal async static Task<WorkerResponse?> GetWorkerByIdAsync(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Worker/{workerId}");
-        var response = client.ExecuteAsync(request);
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        var response = await client.ExecuteAsync(request);
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return null;
+            string? rawResponse = response.Content;
             WorkerResponse? worker = JsonConvert.DeserializeObject<WorkerResponse>(rawResponse);
 
             return worker;
@@ -68,17 +63,16 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal static WorkerResponse? UpdateWorker(int workerId, UpdateWorkerRequest updateWorkerRequest)
+    internal async static Task<WorkerResponse?> UpdateWorkerAsync(int workerId, UpdateWorkerRequest updateWorkerRequest)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Worker/{workerId}", Method.Put);
         request.AddJsonBody(JsonConvert.SerializeObject(updateWorkerRequest));
-        var response = client.ExecutePutAsync(request);
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        var response = await client.ExecutePutAsync(request);
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return null;
+            string? rawResponse = response.Content;
             WorkerResponse? worker = JsonConvert.DeserializeObject<WorkerResponse>(rawResponse);
 
             return worker;
@@ -86,53 +80,48 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal static bool DeleteWorker(int workerId)
+    internal async static Task<bool> DeleteWorkerAsync(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Worker/{workerId}", Method.Delete);
-        var response = client.ExecuteDeleteAsync(request);
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        var response = await client.ExecuteDeleteAsync(request);
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return false;
+            return true;
         }
-        return true;
+        else return false;
     }
 
     #endregion Worker Methods
 
     #region Shift Methods
 
-    internal static bool CreateShift(CreateShiftRequest shift)
+    internal async static Task<bool> CreateShiftAsync(CreateShiftRequest shift)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest("Shift");
         request.AddJsonBody(JsonConvert.SerializeObject(shift));
-        var response = client.ExecutePostAsync(request);
+        var response = await client.ExecutePostAsync(request);
 
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
             return true;
         }
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.BadRequest)
-        {
-            return false;
-        }
-        return false;
+        else return false;
     }
 
-    internal static List<ShiftResponse> GetAllShiftsForWorker(WorkerResponse worker)
+    internal async static Task<List<ShiftResponse>> GetAllShiftsForWorkerAsync(WorkerResponse worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Shift/{worker.Id}");
-        var response = client.ExecuteAsync(request);
+        var response = await client.ExecuteAsync(request);
 
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string rawResponse = response.Result.Content;
+            string rawResponse = response.Content;
             List<ShiftResponse>? shifts = JsonConvert.DeserializeObject<List<ShiftResponse>>(rawResponse);
 
             if (shifts == null) shifts = new List<ShiftResponse>();
@@ -142,33 +131,32 @@ internal static class ShiftLoggerApiService
         else return new List<ShiftResponse>();
     }
 
-    internal static ShiftResponse? GetUnfinishedShiftForWorker(WorkerResponse worker)
+    internal async static Task<ShiftResponse?> GetUnfinishedShiftForWorkerAsync(WorkerResponse worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Shift/unfinished/{worker.Id}");
-        var response = client.ExecuteAsync(request);
+        var response = await client.ExecuteAsync(request);
 
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string rawResponse = response.Result.Content;
+            string rawResponse = response.Content;
             ShiftResponse? unfinishedShift = JsonConvert.DeserializeObject<ShiftResponse>(rawResponse);
             return unfinishedShift;
         }
         else return null;
     }
 
-    internal static ShiftResponse? UpdateShift(int shiftId, UpdateShiftRequest updateShiftRequest)
+    internal async static Task<ShiftResponse?> UpdateShiftAsync(int shiftId, UpdateShiftRequest updateShiftRequest)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Shift/{shiftId}", Method.Put);
         request.AddJsonBody(JsonConvert.SerializeObject(updateShiftRequest));
-        var response = client.ExecutePutAsync(request);
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        var response = await client.ExecutePutAsync(request);
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return null;
+            string? rawResponse = response.Content;
             ShiftResponse? shift = JsonConvert.DeserializeObject<ShiftResponse>(rawResponse);
 
             return shift;
@@ -176,18 +164,17 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal static bool DeleteShift(int shiftId)
+    internal async static Task<bool> DeleteShiftAsync(int shiftId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
         RestRequest request = new RestRequest($"Shift/{shiftId}", Method.Delete);
-        var response = client.ExecuteDeleteAsync(request);
-        if (response.Result.StatusCode == System.Net.HttpStatusCode.OK)
+        var response = await client.ExecuteDeleteAsync(request);
+        if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(response.Content))
         {
-            string? rawResponse = response.Result.Content;
-            if (string.IsNullOrEmpty(rawResponse)) return false;
+            return true;
         }
-        return true;
+        else return false;
     }
 
     #endregion Shift Methods

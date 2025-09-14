@@ -9,12 +9,12 @@ using Spectre.Console;
 namespace ShiftLogger.Console;
 public class Program()
 {
-    public static void Main(string[] args)
+    public async static Task Main(string[] args)
     {
         AnsiConsole.WriteLine("Starting App...\n\n");
 
         AnsiConsole.Clear();
-        MainMenuController.RunMainMenuLoop();
+        await MainMenuController.RunMainMenuLoop();
 
         //TestPostWorker();
 
@@ -28,9 +28,9 @@ public class Program()
 
 
 
-    public static void TestGetAllWorkers()
+    public async static Task TestGetAllWorkers()
     {
-        List<WorkerResponse> allWorkers = ShiftLoggerApiService.GetAllWorkers();
+        List<WorkerResponse> allWorkers = await ShiftLoggerApiService.GetAllWorkersAsync();
 
         foreach (WorkerResponse worker in allWorkers)
         {
@@ -38,26 +38,26 @@ public class Program()
         }
     }
 
-    public static void TestPostWorker()
+    public async static Task TestPostWorker()
     {
         CreateWorkerRequest worker = new CreateWorkerRequest() { Name = "Test" };
-        bool result = ShiftLoggerApiService.CreateWorker(worker);
+        bool result = await ShiftLoggerApiService.CreateWorkerAsync(worker);
 
         AnsiConsole.WriteLine(result);
     }
 
-    public static void TestUpdateWorker()
+    public async static Task TestUpdateWorker()
     {
-        WorkerResponse preUpdate = ShiftLoggerApiService.GetWorkerById(2);
+        WorkerResponse? preUpdate = await ShiftLoggerApiService.GetWorkerByIdAsync(2);
         AnsiConsole.WriteLine($"Pre-update: Id = {preUpdate.Id}, Name = {preUpdate.Name}");
 
         UpdateWorkerRequest newReq = new UpdateWorkerRequest() { Id = 2, Name = "Josh" };
         AnsiConsole.WriteLine($"Testing update worker Id = {newReq.Id}, Name = {newReq.Name}");
-        WorkerResponse postUpdate = ShiftLoggerApiService.UpdateWorker(newReq.Id, newReq);
+        WorkerResponse? postUpdate = await ShiftLoggerApiService.UpdateWorkerAsync(newReq.Id, newReq);
         if (postUpdate != null)
         {
             AnsiConsole.WriteLine($"Post-update: Id = {postUpdate.Id}, Name = {postUpdate.Name}");
-            WorkerResponse postUpdateGet = ShiftLoggerApiService.GetWorkerById(2);
+            WorkerResponse? postUpdateGet = await ShiftLoggerApiService.GetWorkerByIdAsync(2);
             AnsiConsole.WriteLine($"Post-update Get: Id = {postUpdateGet.Id}, Name = {postUpdateGet.Name}");
         }
         else AnsiConsole.WriteLine("Null returned from ShiftLoggerApiService.UpdateWorker");
