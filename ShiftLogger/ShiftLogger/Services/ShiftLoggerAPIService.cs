@@ -7,13 +7,13 @@ using ShiftLogger.Contracts.Requests.Workers;
 using Spectre.Console;
 
 namespace ShiftLogger.Console.Services;
-internal static class ShiftLoggerApiService
+internal class ShiftLoggerApiService
 {
-    private static readonly string serviceAddress = "https://localhost:7099/api/";
+    private readonly string serviceAddress = "https://localhost:7099/api/";
 
     #region Worker Methods
 
-    internal async static Task<bool> CreateWorkerAsync(CreateWorkerRequest worker)
+    internal async Task<bool> CreateWorkerAsync(CreateWorkerRequest worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -28,7 +28,7 @@ internal static class ShiftLoggerApiService
         else return false;
     }
 
-    internal async static Task<List<WorkerResponse>> GetAllWorkersAsync()
+    internal async Task<List<WorkerResponse>> GetAllWorkersAsync()
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -47,7 +47,7 @@ internal static class ShiftLoggerApiService
         else return new List<WorkerResponse>();
     }
 
-    internal async static Task<WorkerResponse?> GetWorkerByIdAsync(int workerId)
+    internal async Task<WorkerResponse?> GetWorkerByIdAsync(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -63,7 +63,7 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal async static Task<WorkerResponse?> UpdateWorkerAsync(int workerId, UpdateWorkerRequest updateWorkerRequest)
+    internal async Task<WorkerResponse?> UpdateWorkerAsync(int workerId, UpdateWorkerRequest updateWorkerRequest)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -80,7 +80,7 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal async static Task<bool> DeleteWorkerAsync(int workerId)
+    internal async Task<bool> DeleteWorkerAsync(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -97,7 +97,7 @@ internal static class ShiftLoggerApiService
 
     #region Shift Methods
 
-    internal async static Task<bool> CreateShiftAsync(CreateShiftRequest shift)
+    internal async Task<bool> CreateShiftAsync(CreateShiftRequest shift)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -112,7 +112,7 @@ internal static class ShiftLoggerApiService
         else return false;
     }
 
-    internal async static Task<List<ShiftResponse>> GetAllShiftsForWorkerAsync(WorkerResponse worker)
+    internal async Task<List<ShiftResponse>> GetAllShiftsForWorkerAsync(WorkerResponse worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -131,7 +131,7 @@ internal static class ShiftLoggerApiService
         else return new List<ShiftResponse>();
     }
 
-    internal async static Task<ShiftResponse?> GetUnfinishedShiftForWorkerAsync(WorkerResponse worker)
+    internal async Task<ShiftResponse?> GetUnfinishedShiftForWorkerAsync(WorkerResponse worker)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -147,7 +147,7 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal async static Task<ShiftResponse?> UpdateShiftAsync(int shiftId, UpdateShiftRequest updateShiftRequest)
+    internal async Task<ShiftResponse?> UpdateShiftAsync(int shiftId, UpdateShiftRequest updateShiftRequest)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);
@@ -164,7 +164,7 @@ internal static class ShiftLoggerApiService
         else return null;
     }
 
-    internal async static Task<bool> DeleteShiftAsync(int shiftId)
+    internal async Task<bool> DeleteShiftAsync(int shiftId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
         RestClient client = new RestClient(options);

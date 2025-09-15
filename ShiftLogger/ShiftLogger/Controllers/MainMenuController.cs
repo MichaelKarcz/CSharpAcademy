@@ -3,12 +3,24 @@ using ShiftLogger.Console.Services;
 using ShiftLogger.Contracts.Responses.Shifts;
 using ShiftLogger.Contracts.Responses.Workers;
 using Spectre.Console;
+using System.Runtime.CompilerServices;
 
 namespace ShiftLogger.Console.Controllers;
 
-internal static class MainMenuController
+internal class MainMenuController
 {
-    internal async static Task RunMainMenuLoop()
+    private readonly ShiftLoggerApiService _shiftLoggerApiService;
+    private readonly LoggedInMenuController _loggedInMenuController;
+    private readonly EditWorkersMenuController _editWorkersMenuController;
+
+    internal MainMenuController(ShiftLoggerApiService shiftLoggerApiService, LoggedInMenuController loggedInMenuController, EditWorkersMenuController editWorkersMenuController)
+    {
+        _shiftLoggerApiService = shiftLoggerApiService;
+        _loggedInMenuController = loggedInMenuController;
+        _editWorkersMenuController = editWorkersMenuController;
+    }
+
+    internal async Task RunMainMenuLoopAsync()
     {
         bool exitApplication = false;
         while (!exitApplication)
@@ -33,13 +45,14 @@ internal static class MainMenuController
                     exitApplication = true;
                     break;
                 case 1:
-                    await LoggedInMenuController.RunMainLoggedInMenu();
+                    await _loggedInMenuController.RunMainLoggedInMenuAsync();
                     break;
                 case 2:
-                    DisplayHelper.ViewAllWorkers();
+                    List<WorkerResponse> allWorkers = await _shiftLoggerApiService.GetAllWorkersAsync();
+                    DisplayHelper.ViewWorkers(allWorkers);
                     break;
                 case 3:
-                    EditWorkersMenuController.RunMainEditWorkersMenu();
+                    await _editWorkersMenuController.RunMainEditWorkersMenuAsync();
                     break;
                 default:
                     break;

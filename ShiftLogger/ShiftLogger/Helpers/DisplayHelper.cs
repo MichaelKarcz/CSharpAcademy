@@ -10,12 +10,6 @@ internal static class DisplayHelper
     public static string DateFormat = "MM-dd-yyyy hh:mm tt";
     public static string DateFormatExample = "05-24-2025 05:22 PM";
 
-    internal async static Task ViewAllWorkers()
-    {
-        List<WorkerResponse> allWorkers = await ShiftLoggerApiService.GetAllWorkersAsync();
-        ViewWorkers(allWorkers);
-    }
-
     internal static void ViewWorkers(List<WorkerResponse> workers)
     {
         AnsiConsole.Clear();

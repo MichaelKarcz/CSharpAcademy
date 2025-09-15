@@ -9,10 +9,18 @@ namespace ShiftLogger.Console.Controllers;
 
 internal class LoggedInMenuController
 {
-    internal async static Task RunMainLoggedInMenu()
+
+    private readonly ShiftLoggerApiService _shiftLoggerApiService;
+
+    internal LoggedInMenuController(ShiftLoggerApiService shiftLoggerApiService)
+    {
+        _shiftLoggerApiService = shiftLoggerApiService;
+    }
+
+    internal async Task RunMainLoggedInMenuAsync()
     {
         AnsiConsole.Clear();
-        WorkerResponse? loggedInWorker = await LoginPrompt();
+        WorkerResponse? loggedInWorker = await LoginPromptAsync();
 
         if (loggedInWorker == null)
         {
@@ -46,42 +54,42 @@ internal class LoggedInMenuController
                     loggedInWorker = null;
                     break;
                 case 1:
-                    StartShift(loggedInWorker);
+                    await StartShiftAsync(loggedInWorker);
                     break;
                 case 2:
-                    EndShift(loggedInWorker);
+                    await EndShiftAsync(loggedInWorker);
                     break;
                 case 3:
-                    ViewAllShifts(loggedInWorker);
+                    await ViewAllShiftsAsync(loggedInWorker);
                     break;
                 case 4:
-                    ModifyShift(loggedInWorker);
+                    await ModifyShiftAsync(loggedInWorker);
                     break;
                 case 5:
-                    DeleteShift(loggedInWorker);
+                    await DeleteShiftAsync(loggedInWorker);
                     break;
 
             }
         }
     }
 
-    internal async static Task<WorkerResponse?> LoginPrompt()
+    internal async Task<WorkerResponse?> LoginPromptAsync()
     {
         int workerId = AnsiConsole.Prompt(new TextPrompt<int>("\nEnter your worker Id: ")
             .ValidationErrorMessage("Please enter an Id. Your input should be a number."));
-        WorkerResponse? worker = await ShiftLoggerApiService.GetWorkerByIdAsync(workerId);
+        WorkerResponse? worker = await _shiftLoggerApiService.GetWorkerByIdAsync(workerId);
 
         while ((worker == null || string.IsNullOrEmpty(worker.Name)) && workerId != 0)
         {
             workerId = AnsiConsole.Prompt(new TextPrompt<int>("\n\nNo workers were found with that Id. Please enter a valid Id or enter 0 to return to the previous menu: "));
-            worker = await ShiftLoggerApiService.GetWorkerByIdAsync(workerId);
+            worker = await _shiftLoggerApiService.GetWorkerByIdAsync(workerId);
         }
 
         AnsiConsole.Clear();
         return worker;
     }
 
-    internal async static Task StartShift(WorkerResponse loggedInWorker)
+    internal async Task StartShiftAsync(WorkerResponse loggedInWorker)
     {
         AnsiConsole.Clear();
 
@@ -91,7 +99,7 @@ internal class LoggedInMenuController
             return;
         }
 
-        ShiftResponse? unfinishedShift = await ShiftLoggerApiService.GetUnfinishedShiftForWorkerAsync(loggedInWorker);
+        ShiftResponse? unfinishedShift = await _shiftLoggerApiService.GetUnfinishedShiftForWorkerAsync(loggedInWorker);
         if (unfinishedShift != null)
         {
             AnsiConsole.WriteLine("\nThere is already an ongoing shift - please finish that shift before starting a new one.\n\n");
@@ -100,12 +108,12 @@ internal class LoggedInMenuController
 
         CreateShiftRequest newShift = new CreateShiftRequest() { WorkerId = loggedInWorker.Id};
 
-        bool shiftCreated = await ShiftLoggerApiService.CreateShiftAsync(newShift);
+        bool shiftCreated = await _shiftLoggerApiService.CreateShiftAsync(newShift);
         if (!shiftCreated) AnsiConsole.WriteLine("There was an error creating the shift.");
         else AnsiConsole.WriteLine("A new shift has been created successfully with the current time as the start time!\n\n");
     }
 
-    internal async static Task EndShift(WorkerResponse loggedInWorker)
+    internal async Task EndShiftAsync(WorkerResponse loggedInWorker)
     {
         AnsiConsole.Clear();
 
@@ -115,7 +123,7 @@ internal class LoggedInMenuController
             return;
         }
 
-        ShiftResponse? shiftToFinish = await ShiftLoggerApiService.GetUnfinishedShiftForWorkerAsync(loggedInWorker);
+        ShiftResponse? shiftToFinish = await _shiftLoggerApiService.GetUnfinishedShiftForWorkerAsync(loggedInWorker);
         if (shiftToFinish == null)
         {
             AnsiConsole.WriteLine("There are no unfinished shifts to finish for this worker.\n\n");
@@ -126,7 +134,7 @@ internal class LoggedInMenuController
             try
             {
                 UpdateShiftRequest updatedShift = new UpdateShiftRequest() { Id = shiftToFinish.Id, StartTime = shiftToFinish.StartTime, EndTime = shiftToFinish.EndTime };
-                shiftToFinish = await ShiftLoggerApiService.UpdateShiftAsync(shiftToFinish.Id, updatedShift);
+                shiftToFinish = await _shiftLoggerApiService.UpdateShiftAsync(shiftToFinish.Id, updatedShift);
 
                 if (shiftToFinish == null)
                 {
@@ -144,7 +152,7 @@ internal class LoggedInMenuController
         }
     }
 
-    internal async static Task ViewAllShifts(WorkerResponse loggedInWorker)
+    internal async Task ViewAllShiftsAsync(WorkerResponse loggedInWorker)
     {
         AnsiConsole.Clear();
 
@@ -156,7 +164,7 @@ internal class LoggedInMenuController
 
         try
         {
-            List<ShiftResponse> allShifts = await ShiftLoggerApiService.GetAllShiftsForWorkerAsync(loggedInWorker);
+            List<ShiftResponse> allShifts = await _shiftLoggerApiService.GetAllShiftsForWorkerAsync(loggedInWorker);
 
             if (allShifts.Count < 1)
             {
@@ -172,7 +180,7 @@ internal class LoggedInMenuController
         }
     }
 
-    internal async static Task ModifyShift(WorkerResponse loggedInWorker)
+    internal async Task ModifyShiftAsync(WorkerResponse loggedInWorker)
     {
         AnsiConsole.Clear();
 
@@ -185,7 +193,7 @@ internal class LoggedInMenuController
         try
         {
             bool shiftUpdated = false;
-            List<ShiftResponse> allShifts = await ShiftLoggerApiService.GetAllShiftsForWorkerAsync(loggedInWorker);
+            List<ShiftResponse> allShifts = await _shiftLoggerApiService.GetAllShiftsForWorkerAsync(loggedInWorker);
 
             if (allShifts.Count < 1)
             {
@@ -230,7 +238,7 @@ internal class LoggedInMenuController
             if (shiftUpdated)
             {
                 UpdateShiftRequest updateShiftRequest = new UpdateShiftRequest() { Id = selectedShift.Id, StartTime = selectedShift.StartTime, EndTime = selectedShift.EndTime};
-                await ShiftLoggerApiService.UpdateShiftAsync(selectedShift.Id, updateShiftRequest);
+                await _shiftLoggerApiService.UpdateShiftAsync(selectedShift.Id, updateShiftRequest);
                 AnsiConsole.WriteLine("The shift has been updated!\n\n");
             }
         }
@@ -240,7 +248,7 @@ internal class LoggedInMenuController
         }
     }
 
-    internal async static Task DeleteShift(WorkerResponse loggedInWorker)
+    internal async Task DeleteShiftAsync(WorkerResponse loggedInWorker)
     {
         AnsiConsole.Clear();
 
@@ -252,7 +260,7 @@ internal class LoggedInMenuController
 
         try
         {
-            List<ShiftResponse> allShifts = await ShiftLoggerApiService.GetAllShiftsForWorkerAsync(loggedInWorker);
+            List<ShiftResponse> allShifts = await _shiftLoggerApiService.GetAllShiftsForWorkerAsync(loggedInWorker);
 
             if (allShifts.Count < 1)
             {
@@ -272,7 +280,7 @@ internal class LoggedInMenuController
 
             if (confirmDelete)
             {
-                bool shiftDeleted = await ShiftLoggerApiService.DeleteShiftAsync(selectedShift.Id);
+                bool shiftDeleted = await _shiftLoggerApiService.DeleteShiftAsync(selectedShift.Id);
                 if (shiftDeleted)
                 {
                     AnsiConsole.WriteLine("The shift has been deleted successfully.\n");

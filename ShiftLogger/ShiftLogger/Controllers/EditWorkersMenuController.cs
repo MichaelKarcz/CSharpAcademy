@@ -8,7 +8,16 @@ namespace ShiftLogger.Console.Controllers;
 
 internal class EditWorkersMenuController
 {
-    internal async static void RunMainEditWorkersMenu()
+
+    private readonly ShiftLoggerApiService _shiftLoggerApiService;
+
+    internal EditWorkersMenuController(ShiftLoggerApiService shiftLoggerApiService)
+    {
+        _shiftLoggerApiService = shiftLoggerApiService;
+    }
+
+
+    internal async Task RunMainEditWorkersMenuAsync()
     {
         bool navigatePrevious = false;
         while (!navigatePrevious)
@@ -34,16 +43,17 @@ internal class EditWorkersMenuController
                     navigatePrevious = true;
                     break;
                 case 1:
-                    DisplayHelper.ViewAllWorkers();
+                    List<WorkerResponse> allWorkers = await _shiftLoggerApiService.GetAllWorkersAsync();
+                    DisplayHelper.ViewWorkers(allWorkers);
                     break;
                 case 2:
-                    AddWorker();
+                    await AddWorkerAsync();
                     break;
                 case 3:
-                    ModifyExistingWorker();
+                    await ModifyExistingWorkerAsync();
                     break;
                 case 4:
-                    DeleteExistingWorker();
+                    await DeleteExistingWorkerAsync();
                     break;
                 default:
                     break;
@@ -51,7 +61,7 @@ internal class EditWorkersMenuController
         }
     }
 
-    private async static Task AddWorker()
+    private async Task AddWorkerAsync()
     {
         AnsiConsole.Clear();
         string workerName = AnsiConsole.Prompt(new TextPrompt<string>("Enter the name of the new worker: "));
@@ -65,7 +75,7 @@ internal class EditWorkersMenuController
         CreateWorkerRequest newWorker = new CreateWorkerRequest() { Name = workerName };
         try
         {
-            bool addWorkerSuccessful = await ShiftLoggerApiService.CreateWorkerAsync(newWorker);
+            bool addWorkerSuccessful = await _shiftLoggerApiService.CreateWorkerAsync(newWorker);
 
             if (addWorkerSuccessful)
             {
@@ -83,10 +93,10 @@ internal class EditWorkersMenuController
         }
     }
 
-    private async static Task ModifyExistingWorker()
+    private async Task ModifyExistingWorkerAsync()
     {
         AnsiConsole.Clear();
-        List<WorkerResponse> allWorkers = await ShiftLoggerApiService.GetAllWorkersAsync();
+        List<WorkerResponse> allWorkers = await _shiftLoggerApiService.GetAllWorkersAsync();
 
         WorkerResponse? workerToModify = InputHelper.SelectAWorker(allWorkers);
         if (workerToModify == null)
@@ -108,7 +118,7 @@ internal class EditWorkersMenuController
 
         try
         {
-            updatedWorker = await ShiftLoggerApiService.UpdateWorkerAsync(updateWorkerRequest.Id, updateWorkerRequest);
+            updatedWorker = await _shiftLoggerApiService.UpdateWorkerAsync(updateWorkerRequest.Id, updateWorkerRequest);
         }
         catch(Exception ex)
         {
@@ -117,10 +127,10 @@ internal class EditWorkersMenuController
 
     }
 
-    private async static Task DeleteExistingWorker()
+    private async Task DeleteExistingWorkerAsync()
     {
         AnsiConsole.Clear();
-        List<WorkerResponse> allWorkers = await ShiftLoggerApiService.GetAllWorkersAsync();
+        List<WorkerResponse> allWorkers = await _shiftLoggerApiService.GetAllWorkersAsync();
         WorkerResponse? workerToDelete = InputHelper.SelectAWorker(allWorkers);
         if (workerToDelete == null)
         {
@@ -129,7 +139,7 @@ internal class EditWorkersMenuController
 
         try
         {
-            if (await ShiftLoggerApiService.DeleteWorkerAsync(workerToDelete.Id))
+            if (await _shiftLoggerApiService.DeleteWorkerAsync(workerToDelete.Id))
             {
                 AnsiConsole.WriteLine($"The worker with Id = {workerToDelete.Id}, {workerToDelete.Name}, was deleted successfully!\n");
             }
@@ -141,5 +151,4 @@ internal class EditWorkersMenuController
             AnsiConsole.WriteLine($"There was an unexpected error attempting to delete this worker. More information: {ex.Message}\n");
         }
     }
-
 }
