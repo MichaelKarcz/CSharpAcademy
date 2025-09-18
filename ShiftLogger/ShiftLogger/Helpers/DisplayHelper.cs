@@ -2,6 +2,7 @@
 using ShiftLogger.Contracts.Responses.Shifts;
 using ShiftLogger.Contracts.Responses.Workers;
 using Spectre.Console;
+using System.Net;
 
 namespace ShiftLogger.Console.Helpers;
 
@@ -53,5 +54,19 @@ internal static class DisplayHelper
         table.ShowRowSeparators();
         AnsiConsole.Write(table);
         AnsiConsole.WriteLine();
+    }
+
+    internal static string GetFormattedErrorMessage(HttpStatusCode statusCode, string? responseContent)
+    {
+        return statusCode switch
+        {
+            HttpStatusCode.BadRequest => $"Invalid data: {responseContent}",
+            HttpStatusCode.Conflict => "Entity already exists",
+            HttpStatusCode.UnprocessableEntity => "Entity data failed validation",
+            HttpStatusCode.Unauthorized => "Authentication required to create entity",
+            HttpStatusCode.Forbidden => "Access forbidden - cannot create entity",
+            HttpStatusCode.InternalServerError => "Server error occurred while creating entity",
+            _ => $"Unexpected response trying to create entity: {statusCode}"
+        };
     }
 }
