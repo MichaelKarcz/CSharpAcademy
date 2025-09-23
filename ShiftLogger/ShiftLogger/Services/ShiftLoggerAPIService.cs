@@ -288,7 +288,7 @@ internal class ShiftLoggerApiService
             };
         }
     }
-    // -------------------------------------------------------------------------------------------------------
+    
     internal async Task<ServiceResult<string>> DeleteWorkerAsync(int workerId)
     {
         RestClientOptions options = new RestClientOptions(serviceAddress);
