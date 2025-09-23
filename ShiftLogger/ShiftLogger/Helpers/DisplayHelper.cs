@@ -1,5 +1,4 @@
-﻿using ShiftLogger.Console.Services;
-using ShiftLogger.Contracts.Responses.Shifts;
+﻿using ShiftLogger.Contracts.Responses.Shifts;
 using ShiftLogger.Contracts.Responses.Workers;
 using Spectre.Console;
 using System.Net;

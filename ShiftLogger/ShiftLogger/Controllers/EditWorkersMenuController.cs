@@ -43,8 +43,7 @@ internal class EditWorkersMenuController
                     navigatePrevious = true;
                     break;
                 case 1:
-                    List<WorkerResponse> allWorkers = await _shiftLoggerApiService.GetAllWorkersAsync();
-                    DisplayHelper.ViewWorkers(allWorkers);
+                    await ViewAllWorkers();
                     break;
                 case 2:
                     await AddWorkerAsync();
@@ -61,6 +60,21 @@ internal class EditWorkersMenuController
         }
     }
 
+    private async Task ViewAllWorkers()
+    {
+        AnsiConsole.Clear();
+
+        ServiceResult<List<WorkerResponse>> serviceResult = await _shiftLoggerApiService.GetAllWorkersAsync();
+        if (serviceResult.Success)
+        {
+            DisplayHelper.ViewWorkers(serviceResult.Data);
+        }
+        else
+        {
+            AnsiConsole.WriteLine(serviceResult.ErrorMessage);
+        }
+    }
+    
     private async Task AddWorkerAsync()
     {
         AnsiConsole.Clear();
@@ -75,6 +89,7 @@ internal class EditWorkersMenuController
         CreateWorkerRequest newWorker = new CreateWorkerRequest() { Name = workerName };
         try
         {
+
             bool addWorkerSuccessful = await _shiftLoggerApiService.CreateWorkerAsync(newWorker);
 
             if (addWorkerSuccessful)
